@@ -1,0 +1,51 @@
+html, body {
+    height: 100%;
+    background-color: aliceblue;
+}
+
+nav {
+    background-color: #ef5350;
+    
+}
+
+footer {
+    background-color: #ef5350;
+}
+
+.content {
+    min-height: 100vh;
+}
+
+.pokedex {
+    font-size: 22px;
+    color: #FFDE00;
+    text-shadow: 2px 2px #3B4CCA;
+}
+
+.nav-font {
+    font-size: 20px;
+    color: #FFDE00;
+    text-shadow: 2px 2px #3B4CCA;
+}
+
+#nav-image {
+    height: 40px;
+}
+
+.profile-dropdown {
+    background-color: #ef5350;
+}
+
+.dropdown-menu > li > a:hover {
+    background-image: none;
+    background-color: #CC0000;
+}
+
+.search-btn {
+    background-color: #FFDE00;
+    font-size: 20px;
+}
+
+.search-btn:hover {
+    background-color: #3B4CCA;
+}
