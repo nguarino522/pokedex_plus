@@ -18,7 +18,6 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', "6uar1n0")
 connect_db(app)
 
 
-
 ##############################################################################
 # User signup/login/logout
 
@@ -64,15 +63,15 @@ def signup():
             db.session.commit()
 
         except IntegrityError:
-            flash("Username already taken", 'danger')
-            return render_template('users/signup.html', form=form)
+            flash("Username already taken", "danger")
+            return render_template("users/signup.html", form=form)
 
         do_login(user)
 
         return redirect("/")
 
     else:
-        return render_template('users/signup.html', form=form)
+        return render_template("users/signup.html", form=form)
 
 
 @app.route('/login', methods=["GET", "POST"])
@@ -89,7 +88,7 @@ def login():
             flash(f"Hello, {user.username}!", "success")
             return redirect("/")
 
-        flash("Invalid credentials.", 'danger')
+        flash("Invalid credentials.", "danger")
 
     return render_template('users/login.html', form=form)
 
@@ -99,7 +98,7 @@ def logout():
     """Handle logout of user."""
 
     do_logout()
-    flash("You have successfully been logged out.", 'success')
+    flash("You have successfully been logged out.", "success")
     return redirect("/login")
 
 
@@ -109,14 +108,32 @@ def logout():
 def index():
     """main landing page"""
     
-    return render_template("base.html")
+    flash("Loaded page working", "info")
+    return render_template("index.html")
 
 
 
 ##############################################################################
-# 404 error handling route:
+# pokemon route handling:
+@app.route('/pokemon')
+def pokemon_page():
+    """main pokemon view page"""
+    
+        
+    return render_template("pokemon/index.html")
+
+
+##############################################################################
+# error handling routes:
+
 @app.errorhandler(404)
 def page_not_found(e):
     """404 NOT FOUND page."""
 
     return render_template("404.html"), 404
+
+@app.errorhandler(500)
+def error_processing_requst(e):
+    """500 SERVER ERROR"""
+
+    return render_template("500.html"), 500

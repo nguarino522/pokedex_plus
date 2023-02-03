@@ -27,11 +27,11 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link nav-font" aria-current="page" href="#">Home</a>
+                        <a class="nav-link nav-font" aria-current="page" href="/">Home</a>
                     </li>
-                    
+
                     <li class="nav-item">
-                        <a class="nav-link nav-font" aria-current="page" href="#">Pokemon</a>
+                        <a class="nav-link nav-font" aria-current="page" href="/pokemon">Pokemon</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle nav-font" href="#" role="button" data-bs-toggle="dropdown"
@@ -44,41 +44,69 @@
                         </ul>
                     </li>
                 </ul>
-                <li class="nav-item d-flex dropdown m-2">
-                    <a class="nav-link dropdown-toggle nav-font" href="#" role="button" data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                        Profile
-                    </a>
-                    <ul class="dropdown-menu profile-dropdown">
-                        <li><a class="dropdown-item text-light" href="#">Favorites</a></li>
-                        <li><a class="dropdown-item text-light" href="#">Saved Teams</a></li>
-                        <li><a class="dropdown-item text-light" href="#">Edit Profile</a></li>
-                    </ul>
-                </li>
-                <form class="d-flex m-2" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Search Pokédex" aria-label="Search">
-                    <button class="btn btn-warning search-btn" type="submit">Go!</button>
-                </form>
+                <ul class="navbar-nav mb-2 mb-lg-0">
+                    {% if not g.user %}
+                    <li class="nav-item d-flex m-2">
+                        <a class="nav-link nav-font" aria-current="page" href="#">Login</a>
+                    </li>
+                    <li class="nav-item d-flex m-2">
+                        <a class="nav-link nav-font" aria-current="page" href="#">Signup</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item d-flex dropdown m-2">
+                        <a class="nav-link dropdown-toggle nav-font" href="#" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            Profile
+                        </a>
+                        <ul class="dropdown-menu profile-dropdown">
+                            <li><a class="dropdown-item text-light" href="#">Favorites</a></li>
+                            <li><a class="dropdown-item text-light" href="#">Saved Teams</a></li>
+                            <li><a class="dropdown-item text-light" href="#">Edit Profile</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item d-flex m-2">
+                        <a class="nav-link nav-font" aria-current="page" href="#">Logout</a>
+                    </li>
+                    {% endif %}
+                    <form class="d-flex m-2" role="search">
+                        <input class="form-control me-2" type="search" placeholder="Search Pokédex" aria-label="Search">
+                        <button class="btn btn-warning search-btn" type="submit">Go!</button>
+                    </form>
+                </ul>
             </div>
         </div>
     </nav>
 
-    <div class="content">
-        {% block content %}{% endblock %}
+    <div class="container content">
+        {% for category, message in get_flashed_messages(with_categories=True) %}
+        <div class="m-2 alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+
+        {% block content %}
+        {% endblock %}
+
     </div>
+
+    <!-- <div class="content">
+        
+    </div> -->
 
     <footer class="mainfooter" role="contentinfo">
         <div class="text-center text-light pb-3">
             <section>
-                <a class="btn btn-link btn-floating btn-lg text-light m-1" target="_blank" href="https://github.com/nguarino522/pokedex_plus" role="button"
-                data-mdb-ripple-color="light"><i class="fa-brands fa-github-alt"></i></i></a>
-                <a class="btn btn-link btn-floating btn-lg text-light m-1" target="_blank" href="https://www.linkedin.com/in/nicholasguarino/" role="button"
-                    data-mdb-ripple-color="light"><i class="fa-brands fa-linkedin-in"></i></a>
-                <a class="btn btn-link btn-floating btn-lg text-light m-1" href="mailto: nguarino05@gmail.com" role="button"
-                    data-mdb-ripple-color="light"><i class="fa-solid fa-envelope"></i></i></a>
+                <a class="btn btn-link btn-floating btn-lg text-light m-1" target="_blank"
+                    href="https://github.com/nguarino522/pokedex_plus" role="button" data-mdb-ripple-color="light"><i
+                        class="fa-brands fa-github-alt"></i></i></a>
+                <a class="btn btn-link btn-floating btn-lg text-light m-1" target="_blank"
+                    href="https://www.linkedin.com/in/nicholasguarino/" role="button" data-mdb-ripple-color="light"><i
+                        class="fa-brands fa-linkedin-in"></i></a>
+                <a class="btn btn-link btn-floating btn-lg text-light m-1" href="mailto: nguarino05@gmail.com"
+                    role="button" data-mdb-ripple-color="light"><i class="fa-solid fa-envelope"></i></i></a>
             </section>
-            <span class="mb-3 mb-md-0">&copy; 2023 <a href="https://www.linkedin.com/in/nicholasguarino/" class="text-info" target="_blank">Nicholas Guarino</a></span><br>
-            <span>All data has been sourced from <a href="https://pokeapi.co/" class="text-info" target="_blank">PokeApi</a>.</span>
+            <span class="mb-3 mb-md-0">&copy; 2023 <a href="https://www.linkedin.com/in/nicholasguarino/"
+                    class="text-info" target="_blank">Nicholas Guarino</a></span><br>
+            <span>All data has been sourced from <a href="https://pokeapi.co/" class="text-info"
+                    target="_blank">PokeApi</a>.</span>
         </div>
     </footer>
 

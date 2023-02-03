@@ -4,8 +4,8 @@ html, body {
 }
 
 nav {
-    background-color: #ef5350;
-    
+    /* background-color: #eb6864; */
+    background-color: #ef5350;    
 }
 
 footer {
@@ -48,4 +48,5 @@ footer {
 
 .search-btn:hover {
     background-color: #3B4CCA;
+    color: #FFDE00;
 }
