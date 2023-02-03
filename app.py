@@ -1,6 +1,10 @@
 import os
 from flask import Flask, render_template, request, flash, redirect, session, g, jsonify
-from models import connect_db
+from models import connect_db, User, db, Pokemon
+from forms import UserAddForm, LoginForm, UserEditProfileForm
+from sqlalchemy.exc import IntegrityError
+
+
 CURR_USER_KEY = "curr_user"
 
 app = Flask(__name__)
@@ -58,12 +62,12 @@ def signup():
                 username=form.username.data,
                 password=form.password.data,
                 email=form.email.data,
-                image_url=form.image_url.data or User.image_url.default.arg,
+                profile_img_url=form.profile_img_url.data or User.profile_img_url.default.arg,
             )
             db.session.commit()
 
         except IntegrityError:
-            flash("Username already taken", "danger")
+            flash("Username/email already taken", "danger")
             return render_template("users/signup.html", form=form)
 
         do_login(user)
@@ -105,10 +109,9 @@ def logout():
 ##############################################################################
 # general route handling:
 @app.route('/')
-def index():
+def index_main():
     """main landing page"""
     
-    flash("Loaded page working", "info")
     return render_template("index.html")
 
 
@@ -121,6 +124,34 @@ def pokemon_page():
     
         
     return render_template("pokemon/index.html")
+
+
+
+##############################################################################
+# General user routes:
+@app.route('/users/profile', methods=["GET", "POST"])
+def user_profile():
+    """Update profile for current user."""
+
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+    
+    form = UserEditProfileForm()
+
+    if form.validate_on_submit():
+        if User.authenticate(g.user.username, form.password.data):
+            g.user.username = form.username.data
+            g.user.email = form.email.data
+            g.user.profile_img_url = form.profile_img_url.data or g.user.profile_img_url
+
+            db.session.commit()
+            flash("Profile has been successfully updated!", "success")
+            return redirect("/")
+
+        flash("Incorrect password! Please try again.", 'danger')
+
+    return render_template("users/edit.html", form=form, user_id=g.user.id)
 
 
 ##############################################################################

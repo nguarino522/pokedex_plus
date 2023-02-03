@@ -1,20 +1,26 @@
-html, body {
+html,
+body {
     height: 100%;
     background-color: aliceblue;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    z-index: 1;
 }
 
 nav {
     /* background-color: #eb6864; */
-    background-color: #ef5350;    
+    background-color: #ef5350;
 }
 
 footer {
     background-color: #ef5350;
+    margin-top: auto;
 }
 
-.content {
+/* .content {
     min-height: 100vh;
-}
+} */
 
 .pokedex {
     font-size: 22px;
@@ -34,9 +40,11 @@ footer {
 
 .profile-dropdown {
     background-color: #ef5350;
+    color: #FFDE00;
+    text-shadow: 2px 2px #3B4CCA;
 }
 
-.dropdown-menu > li > a:hover {
+.dropdown-menu>li>a:hover {
     background-image: none;
     background-color: #CC0000;
 }
@@ -47,6 +55,35 @@ footer {
 }
 
 .search-btn:hover {
+    background-color: #3B4CCA;
+    color: #FFDE00;
+}
+
+/* ---- particles.js container ---- */
+#particles-js {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: aliceblue;
+    background-image: url("");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: 50% 50%;
+    z-index: -1;
+}
+
+.alert-custom {
+    background-color: #ef5350;
+    color: #FFDE00;
+    text-shadow: 2px 2px #3B4CCA;
+}
+
+.form-buttons {
+    background-color: #FFDE00;
+    font-size: 20px;
+}
+
+.form-buttons:hover {
     background-color: #3B4CCA;
     color: #FFDE00;
 }

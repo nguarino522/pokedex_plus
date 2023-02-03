@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}Sign Up{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-md-center text-center">
+  <div class="col-md-7 col-lg-5 alert alert-custom">
+    <h2 class="join-message">Create an account!</h2>
+    <form method="POST" id="user_form">
+        {{ form.hidden_tag() }}
+
+        {% for field in form if field.widget.input_type != 'hidden' %}
+        <span>
+            {{ field.label(class_="form-label mt-2")}}
+            <!-- {{ field(class_="form-control")}} -->
+
+            {% for error in field.errors %}
+            <small class="form-text text-danger">{{ error }}</small>
+            {% endfor %}
+            {{ field(placeholder=field.label.text, class="form-control") }}
+        </span>
+        {% endfor %}
+      <button class="btn btn-warning form-buttons btn-lg btn-block my-4">Sign me up!</button>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

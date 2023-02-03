@@ -33,7 +33,7 @@ class User(db.Model):
         return f"<User #{self.id}: {self.username}, {self.email}>"
     
     @classmethod
-    def signup(cls, username, email, password, image_url):
+    def signup(cls, username, email, password, profile_img_url):
         """Sign up user.
         Hashes password and adds user to system.
         """
@@ -44,7 +44,7 @@ class User(db.Model):
             username=username,
             email=email,
             password=hashed_pwd,
-            image_url=image_url,
+            profile_img_url=profile_img_url
         )
 
         db.session.add(user)
@@ -76,7 +76,7 @@ class Pokemon(db.Model):
     
     pid = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.Text,nullable=False,unique=True)
-    image_url = db.Column(db.Text, nullable=False, default=DEFAULT_NO_POKEMON_IMG)
+    img_url = db.Column(db.Text, nullable=False, default=DEFAULT_NO_POKEMON_IMG)
     type1 = db.Column(db.Text, nullable=False)
     type2 = db.Column(db.Text, nullable=True)
     

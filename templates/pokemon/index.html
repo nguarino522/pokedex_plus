@@ -3,6 +3,12 @@
 
 {% block content %}
 
-<h1 class="container">Search for pokemon!</h1>
+<div class="alert alert-custom">
+    <h1 class="text-center">Search the Pokédex for Pokemon!</h1>
+    <form class="d-flex m-2" role="search">
+        <input class="form-control me-2" type="search" placeholder="Search Pokédex" aria-label="Search">
+        <button class="btn btn-warning search-btn" type="submit">Go!</button>
+    </form>
+</div>
 
 {% endblock %}
