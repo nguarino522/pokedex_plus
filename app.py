@@ -120,7 +120,7 @@ def index_main():
 
 ##############################################################################
 # pokedex route handling:
-@app.route('/pokedex/<int:page_num>', methods=["GET", "POST"])
+@app.route('/pokedex/<int:page_num>')
 def main_pokemon_page(page_num):
     """main pokemon view/landing page"""
     
@@ -144,6 +144,15 @@ def single_pokemon_page(pokemon_name):
     p = Pokemon.retrieve_pokemon_data(pokemon_name)
     
     return render_template("pokemon/show.html")
+
+@app.route('/pokedex/search')
+def pokedex_search():
+    """search route for pokedex/pokemon"""
+    
+    search = request.args.get('q')
+    pokemons = Pokemon.query.filter(Pokemon.name.like(f"%{search}%")).all()
+    
+    return render_template("pokemon/search.html", pokemons=pokemons)
 
 
 ##############################################################################

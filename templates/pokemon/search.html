@@ -4,22 +4,34 @@
 {% block content %}
 
 <div class="alert alert-custom">
-    <h1 class="text-center">Here are your search results!</h1>
+    <h1 class="text-center">Here are your search results! Feel free to search again:</h1>
+    <form class="d-flex m-2" action="/pokedex/search">
+        <input class="form-control me-2" type="search" placeholder="Search Pokédex again with search term (text only)"
+            aria-label="Search" name="q">
+        <button class="btn btn-warning search-btn" type="submit">Go!</button>
+    </form>
 </div>
 
 
 <div class="row">
 
     <section class="results row d-flex justify-content-center">
+
+        {% if not pokemons %}
+        <div class="container text-center">
+                <h1>No results found!</h1>
+                <img src="https://www.nicepng.com/png/detail/433-4338371_surprised-pikachu-meme.png" alt=""
+                    style="height:200px;" />
+        </div>
+        {% else %}
         {% for pokemon in pokemons %}
 
         <div class="card col-xl-2 col-lg-3 col-md-3 col-sm-5 mx-3 my-4 border-light">
             <a href="/pokemon/{{ pokemon.name }}" class="text-decoration-none text-dark">
                 <div class="m-3 my-4">
                     <figure>
-                        <img src="{{ pokemon.image_url }}"
-                            alt="bulbasaur image" title="bulbasaur" class="image img-fluid"
-                            style="border-radius:5px;background-color:rgb(242, 242, 242);">
+                        <img src="{{ pokemon.image_url }}" alt="bulbasaur image" title="bulbasaur"
+                            class="image img-fluid" style="border-radius:5px;background-color:rgb(242, 242, 242);">
                     </figure>
                     <div class="pokemon-info">
                         <p class="id">
@@ -39,6 +51,8 @@
         </div>
 
         {% endfor %}
+
+        {% endif %}
     </section>
 
 </div>

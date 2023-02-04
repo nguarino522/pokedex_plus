@@ -99,18 +99,23 @@ footer {
 
 .card {
     border-radius: 10px;
-  }
-  
-  .results > .card {
+    animation-name: fadeBackground;
+    animation-iteration-count: 1;
+    animation-timing-function: ease-in-out;
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+}
+
+.results>.card {
     transition: all 0.2s ease-in-out;
     /* transition: margin 0.2s ease-in-out; */
-  }
-  
-  .results > .card:hover {
+}
+
+.results>.card:hover {
     transform: scale(1.05);
     box-shadow: 0 0 11px rgba(33, 33, 33, 0.2);
     /* margin-top: -30px; */
-  }
+}
 
 
 
@@ -193,4 +198,17 @@ footer {
 
 .badge-type-unknown {
     background-color: #68A090;
+}
+
+
+
+/* ---- card animation ---- */
+@keyframes fadeBackground {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
 }
