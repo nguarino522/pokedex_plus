@@ -4,31 +4,17 @@
 {% block content %}
 
 <div class="alert alert-custom">
-    <h1 class="text-center">Search the Pokédex for Pokemon!</h1>
-    <form class="d-flex m-2" role="search">
-        <input class="form-control me-2" type="search" placeholder="Search Pokédex with search term (text only)"
-            aria-label="Search">
-        <button class="btn btn-warning search-btn" type="submit">Go!</button>
-    </form>
+    <h1 class="text-center">Here are your search results!</h1>
 </div>
 
 
 <div class="row">
 
-    <div class="text-center my-3">
-        {% if page_num > 1 %}
-        <a class="btn btn-warning search-btn mx-2" href="/pokedex/{{ page_num - 1 }}" role="button">Prev</a>
-        {% endif %}
-        
-        {% if page_num < total_pages %} <a class="btn btn-warning search-btn" href="/pokedex/{{ page_num + 1 }}" role="button">Next</a>
-            {% endif %}
-    </div>
-
     <section class="results row d-flex justify-content-center">
         {% for pokemon in pokemons %}
 
         <div class="card col-xl-2 col-lg-3 col-md-3 col-sm-5 mx-3 my-4 border-light">
-            <a href="/pokedex/pokemon/{{ pokemon.name }}" class="text-decoration-none text-dark">
+            <a href="/pokemon/{{ pokemon.name }}" class="text-decoration-none text-dark">
                 <div class="m-3 my-4">
                     <figure>
                         <img src="{{ pokemon.image_url }}"
@@ -54,15 +40,6 @@
 
         {% endfor %}
     </section>
-
-    <div class="text-center my-3">
-        {% if page_num > 1 %}
-        <a class="btn btn-warning search-btn mx-2" href="/pokedex/{{ page_num - 1 }}" role="button">Prev</a>
-        {% endif %}
-        
-        {% if page_num < total_pages %} <a class="btn btn-warning search-btn" href="/pokedex/{{ page_num + 1 }}" role="button">Next</a>
-            {% endif %}
-    </div>
 
 </div>
 

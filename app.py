@@ -3,6 +3,8 @@ from flask import Flask, render_template, request, flash, redirect, session, g, 
 from models import connect_db, User, db, Pokemon
 from forms import UserAddForm, LoginForm, UserEditProfileForm
 from sqlalchemy.exc import IntegrityError
+from config import BASE_API_URL
+import math
 
 
 CURR_USER_KEY = "curr_user"
@@ -117,14 +119,31 @@ def index_main():
 
 
 ##############################################################################
-# pokemon route handling:
-@app.route('/pokemon')
-def pokemon_page():
-    """main pokemon view page"""
+# pokedex route handling:
+@app.route('/pokedex/<int:page_num>', methods=["GET", "POST"])
+def main_pokemon_page(page_num):
+    """main pokemon view/landing page"""
     
-        
-    return render_template("pokemon/index.html")
+    page_offset = (page_num - 1) * 15
+    total_pages = math.ceil(Pokemon.query.count() / 15)
+    pokemons = Pokemon.query.limit(15).offset(page_offset).all()
+    if not pokemons:
+        return render_template("404.html"), 404
+    
+    return render_template("pokemon/index.html", pokemons=pokemons, page_num=page_num, total_pages=total_pages)
 
+@app.route('/pokedex/pokemon/<pokemon_name>')
+def single_pokemon_page(pokemon_name):
+    """view a single pokemon entry"""
+    
+    
+    p = Pokemon.query.filter_by(name = pokemon_name).first()
+    if not p:
+        return render_template("404.html"), 404
+    
+    p = Pokemon.retrieve_pokemon_data(pokemon_name)
+    
+    return render_template("pokemon/show.html")
 
 
 ##############################################################################

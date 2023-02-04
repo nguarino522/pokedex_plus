@@ -76,7 +76,7 @@ class Pokemon(db.Model):
     
     pid = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.Text,nullable=False,unique=True)
-    img_url = db.Column(db.Text, nullable=False, default=DEFAULT_NO_POKEMON_IMG)
+    image_url = db.Column(db.Text, nullable=False, default=DEFAULT_NO_POKEMON_IMG)
     type1 = db.Column(db.Text, nullable=False)
     type2 = db.Column(db.Text, nullable=True)
     
@@ -84,10 +84,10 @@ class Pokemon(db.Model):
         return f"<Pokemon #{self.pid}: {self.name}>"
     
     @staticmethod
-    def retrieve_pokemon_data(pid):
+    def retrieve_pokemon_data(pname):
         """retrieve data about pokemon based on pid"""
         
-        resp = requests.get(f"{BASE_API_URL}/{pid}").json()
+        resp = requests.get(f"{BASE_API_URL}/{pname}").json()
         return resp
         
     @staticmethod

@@ -61,7 +61,7 @@ footer {
 
 /* ---- particles.js container ---- */
 #particles-js {
-    position: absolute;
+    position: fixed;
     width: 100%;
     height: 100%;
     background-color: aliceblue;
@@ -72,10 +72,18 @@ footer {
     z-index: -1;
 }
 
+
 .alert-custom {
     background-color: #ef5350;
     color: #FFDE00;
     text-shadow: 2px 2px #3B4CCA;
+    opacity: .9;
+}
+
+.alert-custom-box {
+    background-color: #B3A125;
+    color: #3B4CCA;
+    text-shadow: 2px 2px #FF0000;
 }
 
 .form-buttons {
@@ -86,4 +94,103 @@ footer {
 .form-buttons:hover {
     background-color: #3B4CCA;
     color: #FFDE00;
+}
+
+
+.card {
+    border-radius: 10px;
+  }
+  
+  .results > .card {
+    transition: all 0.2s ease-in-out;
+    /* transition: margin 0.2s ease-in-out; */
+  }
+  
+  .results > .card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 11px rgba(33, 33, 33, 0.2);
+    /* margin-top: -30px; */
+  }
+
+
+
+
+/* ---- color badges for pokemon types ---- */
+.badge-type-normal {
+    background-color: #A8A77A;
+}
+
+.badge-type-fighting {
+    background-color: #C22E28;
+}
+
+.badge-type-flying {
+    background-color: #A98FF3;
+}
+
+.badge-type-poison {
+    background-color: #A33EA1;
+}
+
+.badge-type-ground {
+    background-color: brown;
+}
+
+.badge-type-rock {
+    background-color: #B6A136;
+}
+
+.badge-type-bug {
+    background-color: #A6B91A;
+}
+
+.badge-type-ghost {
+    background-color: #735797;
+}
+
+.badge-type-steel {
+    background-color: #B7B7CE;
+}
+
+.badge-type-fire {
+    background-color: red;
+}
+
+.badge-type-water {
+    background-color: blue;
+}
+
+.badge-type-grass {
+    background-color: green;
+}
+
+.badge-type-electric {
+    background-color: yellow;
+    color: black;
+}
+
+.badge-type-psychic {
+    background-color: #F95587;
+}
+
+.badge-type-ice {
+    background-color: #96D9D6;
+}
+
+.badge-type-dragon {
+    background-color: orange;
+}
+
+.badge-type-dark {
+    background-color: black;
+    color: white;
+}
+
+.badge-type-fairy {
+    background-color: #D685AD;
+}
+
+
+.badge-type-unknown {
+    background-color: #68A090;
 }
