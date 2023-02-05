@@ -106,6 +106,14 @@ footer {
     animation-fill-mode: forwards;
 }
 
+.fadein-animation {
+    animation-name: fadeBackground;
+    animation-iteration-count: 1;
+    animation-timing-function: ease-in-out;
+    animation-duration: 0.5s;
+    animation-fill-mode: forwards;
+}
+
 .results>.card {
     transition: all 0.2s ease-in-out;
     /* transition: margin 0.2s ease-in-out; */
@@ -117,8 +125,89 @@ footer {
     /* margin-top: -30px; */
 }
 
+.spinner-div {
+    animation-name: fadeBackground;
+    animation-iteration-count: 1;
+    animation-timing-function: ease-in-out;
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+}
 
+.pokemon-card {
+    background-color: rgb(242, 242, 242);
+    border-radius: 25px;
+}
 
+.like-icon {
+    font-size: 35px;
+    color: gray;
+}
+
+.like-icon:hover {
+    color: red;
+}
+
+.favorite-button {
+    display: flex;
+    align-items: center;
+}
+
+.pokemon-number {
+    font-size: 36px;
+    color: #919191;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.captilize-text::first-letter {
+    text-transform: uppercase;
+}
+
+.pokemon-stats {
+    width: 99%;
+    margin-left: 0.1em;
+    border-radius: 25px;
+    padding: 15px;
+}
+
+.abilities-lg {
+    margin-left: 1.5em;
+}
+
+.detail-type {
+    transform: scale(1.5);
+    padding: 5px 25px;
+    margin-right: 5em;
+}
+
+#pokefact {
+    font-size: 22px;
+    color: #1d1c1c;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* .pokemon-info {
+    
+} */
+
+.ability-popout {
+    color:#696969;
+}
+
+.ability-popout:hover {
+    color: #fff;
+}
+
+a.icoGitHub:hover {
+    background-color: #171515;
+}
+  
+a.icoLinkedin:hover {
+    background-color: #007bb7;
+}
+
+a.icoGoogle:hover {
+    background-color: #ecb9b4;
+}
 
 /* ---- color badges for pokemon types ---- */
 .badge-type-normal {
@@ -158,19 +247,22 @@ footer {
 }
 
 .badge-type-fire {
-    background-color: red;
+    background-color: #EB6864;
+    color: white;
 }
 
 .badge-type-water {
-    background-color: blue;
+    background-color: rgb(53, 53, 223);
+    color: white;
 }
 
 .badge-type-grass {
-    background-color: green;
+    background-color: rgb(38, 156, 38);
+    color: white;
 }
 
 .badge-type-electric {
-    background-color: yellow;
+    background-color: rgb(245, 245, 67);
     color: black;
 }
 

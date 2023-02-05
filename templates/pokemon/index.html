@@ -3,8 +3,8 @@
 
 {% block content %}
 
-<div class="alert alert-custom">
-    <h1 class="text-center">Search the Pokédex for Pokemon!</h1>
+<div class="fadein-animation alert alert-custom">
+    <h1 class="text-center">Search the Pokédex for a Pokemon!</h1>
     <form class="d-flex m-2" action="/pokedex/search">
         <input class="form-control me-2" type="search" placeholder="Search Pokédex with search term (text only)"
             aria-label="Search" name="q">
@@ -15,36 +15,36 @@
 
 <div class="row">
 
-    <div class="text-center my-3">
+    <div class="text-center my-3 fadein-animation">
         {% if page_num > 1 %}
         <a class="btn btn-warning search-btn mx-2" href="/pokedex/{{ page_num - 1 }}" role="button">Prev</a>
         {% endif %}
-        
-        {% if page_num < total_pages %} <a class="btn btn-warning search-btn" href="/pokedex/{{ page_num + 1 }}" role="button">Next</a>
+
+        {% if page_num < total_pages %} <a class="btn btn-warning search-btn" href="/pokedex/{{ page_num + 1 }}"
+            role="button">Next</a>
             {% endif %}
     </div>
 
     <section class="results row d-flex justify-content-center">
         {% for pokemon in pokemons %}
 
-        <div class="card col-xl-2 col-lg-3 col-md-3 col-sm-5 mx-3 my-4 border-light">
-            <a href="/pokedex/pokemon/{{ pokemon.name }}" class="text-decoration-none text-dark">
+        <div class="card col-xl-2 col-lg-3 col-md-3 col-sm-5 mx-3 my-4">
+            <a href="/pokedex/pokemon/{{ pokemon.name }}" class="text-decoration-none text-dark" id="pokemonSingleLink">
                 <div class="m-3 my-4">
                     <figure>
-                        <img src="{{ pokemon.image_url }}"
-                            alt="bulbasaur image" title="bulbasaur" class="image img-fluid"
-                            style="border-radius:5px;background-color:rgb(242, 242, 242);">
+                        <img src="{{ pokemon.image_url }}" alt="bulbasaur image" title="bulbasaur"
+                            class="image img-fluid pokemon-card">
                     </figure>
                     <div class="pokemon-info">
                         <p class="id">
                             <span class="number-prefix">#{{ pokemon.pid }}</span>
                         </p>
-                        <h3>{{ pokemon.name }}</h3>
+                        <h3 class="captilize-text">{{ pokemon.name }}</h3>
                         <div class="abilities">
 
-                            <span class="me-2 badge badge-type-{{ pokemon.type1 }}">{{ pokemon.type1 }}</span>
+                            <span class="captilize-text me-2 badge badge-type-{{ pokemon.type1 }}">{{ pokemon.type1 }}</span>
 
-                            <span class="me-2 badge badge-type-{{ pokemon.type2 }}">{{ pokemon.type2 }}</span>
+                            <span class="captilize-text me-2 badge badge-type-{{ pokemon.type2 }}">{{ pokemon.type2 }}</span>
 
                         </div>
                     </div>
@@ -55,12 +55,13 @@
         {% endfor %}
     </section>
 
-    <div class="text-center my-3">
+    <div class="text-center my-3 fadein-animation">
         {% if page_num > 1 %}
         <a class="btn btn-warning search-btn mx-2" href="/pokedex/{{ page_num - 1 }}" role="button">Prev</a>
         {% endif %}
-        
-        {% if page_num < total_pages %} <a class="btn btn-warning search-btn" href="/pokedex/{{ page_num + 1 }}" role="button">Next</a>
+
+        {% if page_num < total_pages %} <a class="btn btn-warning search-btn" href="/pokedex/{{ page_num + 1 }}"
+            role="button">Next</a>
             {% endif %}
     </div>
 

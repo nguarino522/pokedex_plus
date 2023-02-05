@@ -1,7 +1,157 @@
 {% extends 'base.html' %}
-{% block title %}Pokédex{% endblock %}
+{% block title %}{{ pokemon_db.name | capitalize }}{% endblock %}
 
 {% block content %}
 
+<section class="mb-5">
+    <div class="card">
+
+        <div class="pokemon-details-header">
+            <div class="header row m-4">
+                <div class="col-11">
+                    <h1 class="text-center captilize-text">
+                        {{ pokemon['name'] }}
+                        <span class="pokemon-number"> #{{ pokemon['id']}} </span>
+                    </h1>
+                </div>
+                <div class="favorite-button col-1">
+                    <button class="btn btn-sm"><i class="fa fa-heart like-icon"></i></button>
+                </div>
+            </div>
+            <div class="header row m-4">
+
+            </div>
+        </div>
+
+        <div class="pokemon-details-main row mx-auto justify-content-center">
+            <div class="pokemon-image col-6">
+                <figure>
+                    <img src="{{ pokemon_db.image_url }}" alt="{{ pokemon['name'] }} image"
+                        class="image img-fluid mx-auto d-block pokemon-card border">
+                </figure>
+            </div>
+            <div class="pokemon-info col-6">
+                <p class="text-center p-2" id="pokefact">{{ pokefact }}</p>
+                <div class="pokemon-stats row badge-type-{{pokemon_db.type1}} mb-3 text-left">
+                    <div class="col-4 mx-auto mb-4">
+                        <h5>Height</h5>
+                        <p>{{ pokemon['height'] }} ft</p>
+                    </div>
+                    <div class="col-4 mx-auto mb-4">
+                        <h5>Base XP</h5>
+                        <p>{{ pokemon["base_experience"] }} XP</p>
+                    </div>
+                    <div class="col-4 mx-auto">
+                        <h5>Weight</h5>
+                        <p>{{ pokemon["weight"] }} lbs</p>
+                    </div>
+                    <div class="col-4 mx-auto">
+                        <h5>Abilities</h5>
+                        <!-- <p>{% for ability in pokemon["abilities"] %}
+                            {{ ability['ability']['name'] | capitalize }}
+                            {% endfor %}
+                        </p>                         -->
+                        <p>{% for ability in pokemon["abilities"] %}
+                            {{ ability['ability']['name'] | capitalize }}
+                            <button type="button" class="btn btn-sm pop" data-bs-toggle="popover"
+                                data-bs-title="{{ ability['ability']['name'] | capitalize }}"
+                                data-bs-content="{{ ability_facts[ability['ability']['name']] }}">
+                                <i class="fas fa-question-circle ability-popout"></i>
+                            </button><br>
+                            {% endfor %}
+                        </p>
+                    </div>
+
+                    <div class="col-8 mx-auto">
+                        <h5>Stats</h5>
+                        <div class="row">
+
+                            {% for stat in pokemon["stats"] %}
+                            {% if stat["stat"]["name"] == "hp" %}
+                            <div class="col-6">
+                                <span class="p-2">{{ stat["stat"]["name"] | upper }}: <b>{{
+                                        stat["base_stat"]}}</b></span>
+                            </div>
+                            {% else %}
+                            <div class="col-6">
+                                <span class="p-2">{{ stat["stat"]["name"] | capitalize }}: <b>{{
+                                        stat["base_stat"]}}</b></span>
+                            </div>
+                            {% endif %}
+                            {% endfor %}
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row d-flex">
+                    <div class="col-9">
+                        <h4 class="p-2">Type(s):</h4>
+                        <div class="type d-flex justify-content-start">
+                            <span
+                                class="captilize-text detail-type mb-3 badge badge-type-{{ pokemon_db.type1 }}">{{pokemon_db.type1}}</span>
+                            <span
+                                class="captilize-text detail-type mb-3 badge badge-type-{{ pokemon_db.type2 }}">{{pokemon_db.type2}}</span>
+                        </div>
+                    </div>
+                    <!-- <div class="col-12">
+                        <h4>Stats:</h4>
+                        <ul class="card-columns" style="column-count: 3;">
+                            {% for stat in pokemon["stats"] %}
+                            <li class="captilize-text mb-3">{{ stat["stat"]["name"] }}: <b>{{ stat["base_stat"]}}</b>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div> -->
+                </div>
+            </div>
+
+            <div class="pokemon-evolutions text-center m-5">
+                <h4>Evolutions:</h4>
+                <div class="row">
+                    <section class="results row d-flex justify-content-center">
+                        {% if evolutions == "No information found for pokemon's evolutions." %}
+                            <p>{{evolutions}}</p>
+                        {% else %}
+
+                        {% for evolution in evolutions %}
+                        {% if evolution == evolutions[0] %}
+                        {% else %}
+                        <div class="col-1 row align-items-center"><i class="fa-solid fa-arrow-right"></i></div>
+                        {% endif %}
+                        <div class="card col-2 mx-3 my-4">
+                            <a href="/pokedex/pokemon/{{ evolution.name }}" class="text-decoration-none text-dark"
+                                id="pokemonSingleLink">
+                                <div class="m-3 my-4">
+                                    <figure>
+                                        <img src="{{ evolution.image_url }}" alt="bulbasaur image" title="bulbasaur"
+                                            class="image img-fluid pokemon-card">
+                                    </figure>
+                                    <div class="pokemon-info">
+                                        <p class="id">
+                                            <span class="number-prefix">#{{ evolution.pid }}</span>
+                                        </p>
+                                        <h5 class="captilize-text">{{ evolution.name }}</h5>
+                                        <div class="abilities">
+
+                                            <span class="captilize-text me-2 badge badge-type-{{ evolution.type1 }}">{{
+                                                evolution.type1 }}</span>
+
+                                            <span class="captilize-text me-2 badge badge-type-{{ evolution.type2 }}">{{
+                                                evolution.type2 }}</span>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        {% endfor %}
+
+                        {% endif %}
+                    </section>
+                </div>
+            </div>
+
+</section>
 
 {% endblock %}

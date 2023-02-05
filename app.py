@@ -4,12 +4,14 @@ from models import connect_db, User, db, Pokemon
 from forms import UserAddForm, LoginForm, UserEditProfileForm
 from sqlalchemy.exc import IntegrityError
 from config import BASE_API_URL
-import math
-
+import math, requests
+from flask_caching import Cache
 
 CURR_USER_KEY = "curr_user"
 
+cache = Cache(config={'CACHE_TYPE': 'SimpleCache'})
 app = Flask(__name__)
+cache.init_app(app)
 
 # Get DB_URI from environ variable (useful for production/testing) or,
 # if not set there, use development local db.
@@ -35,11 +37,13 @@ def add_user_to_g():
         g.user = User.query.get(session[CURR_USER_KEY])
     else:
         g.user = None
-        
+
+
 def do_login(user):
     """Log in user."""
 
     session[CURR_USER_KEY] = user.id
+
 
 def do_logout():
     """Logout user."""
@@ -113,9 +117,8 @@ def logout():
 @app.route('/')
 def index_main():
     """main landing page"""
-    
-    return render_template("index.html")
 
+    return render_template("index.html")
 
 
 ##############################################################################
@@ -123,35 +126,54 @@ def index_main():
 @app.route('/pokedex/<int:page_num>')
 def main_pokemon_page(page_num):
     """main pokemon view/landing page"""
-    
+
     page_offset = (page_num - 1) * 15
     total_pages = math.ceil(Pokemon.query.count() / 15)
     pokemons = Pokemon.query.limit(15).offset(page_offset).all()
     if not pokemons:
         return render_template("404.html"), 404
-    
+
     return render_template("pokemon/index.html", pokemons=pokemons, page_num=page_num, total_pages=total_pages)
 
+
+# added in flask-caching support to help cache routes and increase performance
+# for now 5 minute timeout on cache, may do infinite after, 
+# the problem is that once cached it won't get a differen pokemon fact based on how it grabs it currently
+# woudl have to move some of the code from model to here in route maybe????? ....
 @app.route('/pokedex/pokemon/<pokemon_name>')
+#@cache.cached(timeout=60)
 def single_pokemon_page(pokemon_name):
     """view a single pokemon entry"""
-    
-    
-    p = Pokemon.query.filter_by(name = pokemon_name).first()
-    if not p:
+
+    pokemon_db = Pokemon.query.filter_by(name=pokemon_name).first()
+    if not pokemon_db:
         return render_template("404.html"), 404
+
+    pokemon = Pokemon.retrieve_pokemon_data(pokemon_name)
+    pokefact = Pokemon.get_random_pokemon_fact(pokemon_name)
+    ability_facts = Pokemon.get_pokemon_ability_data(pokemon_name)
+    evolution_names = Pokemon.get_evolution_data(pokemon_name)
+    if evolution_names == "No information found for pokemon's evolutions.":
+        evolutions = evolution_names
+    else:
+        evolutions = []
+        for name in evolution_names:
+            p = Pokemon.query.filter_by(name=name).first()
+            evolutions.append(p)
     
-    p = Pokemon.retrieve_pokemon_data(pokemon_name)
-    
-    return render_template("pokemon/show.html")
+    # ability_facts=ability_facts increases page load time, need to investigate later when polishing 
+    # UPDATE through testing others apps will be much quicker in prod
+    # UPDATE UPDATE ^ flask-caching is an option which will use as well but issues to work out still
+    return render_template("pokemon/show.html", pokemon=pokemon, pokefact=pokefact, pokemon_db=pokemon_db, ability_facts=ability_facts, evolutions=evolutions)
+
 
 @app.route('/pokedex/search')
 def pokedex_search():
     """search route for pokedex/pokemon"""
-    
+
     search = request.args.get('q')
     pokemons = Pokemon.query.filter(Pokemon.name.like(f"%{search}%")).all()
-    
+
     return render_template("pokemon/search.html", pokemons=pokemons)
 
 
@@ -164,7 +186,7 @@ def user_profile():
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
-    
+
     form = UserEditProfileForm()
 
     if form.validate_on_submit():
@@ -191,8 +213,24 @@ def page_not_found(e):
 
     return render_template("404.html"), 404
 
+
 @app.errorhandler(500)
 def error_processing_requst(e):
     """500 SERVER ERROR"""
 
     return render_template("500.html"), 500
+
+
+##############################################################################
+# Turn off all caching in Flask
+#   automatically close all unused/hanging connections and prevent bottleneck in code
+
+@app.teardown_appcontext
+def shutdown_session(exception=None):
+    db.session.remove()
+    
+    
+# https://stackoverflow.com/a/53715116
+
+
+# ^^^^ not sure if this helps or hurts performance as may want to use flask-caching module to help performance
