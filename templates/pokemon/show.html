@@ -11,11 +11,14 @@
                 <div class="col-11">
                     <h1 class="text-center captilize-text">
                         {{ pokemon['name'] }}
-                        <span class="pokemon-number"> #{{ pokemon['id']}} </span>
+                        <span class="pokemon-number"> #{{ pokemon["id"]}} </span>
                     </h1>
                 </div>
                 <div class="favorite-button col-1">
-                    <button class="btn btn-sm"><i class="fa fa-heart like-icon"></i></button>
+                    <button class="btn btn-sm"><i
+                            class="fa fa-heart {% if fav_pid == pokemon_db.pid %}favorited{% else %}like-icon{% endif %} like-icon-large"
+                            data-id="{{ pokemon_db.pid }}">
+                        </i></button>
                 </div>
             </div>
             <div class="header row m-4">
@@ -111,7 +114,7 @@
                 <div class="row">
                     <section class="results row d-flex justify-content-center">
                         {% if evolutions == "No information found for pokemon's evolutions." %}
-                            <p>{{evolutions}}</p>
+                        <p>{{evolutions}}</p>
                         {% else %}
 
                         {% for evolution in evolutions %}

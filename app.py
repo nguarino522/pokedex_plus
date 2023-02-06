@@ -1,6 +1,6 @@
 import os
 from flask import Flask, render_template, request, flash, redirect, session, g, jsonify
-from models import connect_db, User, db, Pokemon
+from models import connect_db, User, db, Pokemon, Favorite
 from forms import UserAddForm, LoginForm, UserEditProfileForm
 from sqlalchemy.exc import IntegrityError
 from config import BASE_API_URL
@@ -160,11 +160,16 @@ def single_pokemon_page(pokemon_name):
         for name in evolution_names:
             p = Pokemon.query.filter_by(name=name).first()
             evolutions.append(p)
+
+    favorite = Favorite.query.filter_by(pokemon_id=pokemon_db.pid, user_id=g.user.id).first()
+    fav_pid = None
+    if favorite:
+        fav_pid = pokemon_db.pid
     
     # ability_facts=ability_facts increases page load time, need to investigate later when polishing 
     # UPDATE through testing others apps will be much quicker in prod
     # UPDATE UPDATE ^ flask-caching is an option which will use as well but issues to work out still
-    return render_template("pokemon/show.html", pokemon=pokemon, pokefact=pokefact, pokemon_db=pokemon_db, ability_facts=ability_facts, evolutions=evolutions)
+    return render_template("pokemon/show.html", pokemon=pokemon, pokefact=pokefact, pokemon_db=pokemon_db, ability_facts=ability_facts, evolutions=evolutions, fav_pid=fav_pid)
 
 
 @app.route('/pokedex/search')
@@ -178,7 +183,7 @@ def pokedex_search():
 
 
 ##############################################################################
-# General user routes:
+# User routes:
 @app.route('/users/profile', methods=["GET", "POST"])
 def user_profile():
     """Update profile for current user."""
@@ -203,6 +208,42 @@ def user_profile():
 
     return render_template("users/edit.html", form=form, user_id=g.user.id)
 
+@app.route('/users/<int:user_id>/favorites')
+def user_favorites(user_id):
+    """Show user favorited pokemon"""
+
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+    pokemons = []
+    for favorite in g.user.favorites:
+        p = Pokemon.query.filter_by(pid=favorite.pokemon_id).first()
+        pokemons.append(p)
+    
+    return render_template("users/favorites.html", pokemons=pokemons)
+
+@app.route('/users/toggle_favorite/<int:pokemon_id>', methods=["GET", "POST"])
+def toggle_favorite(pokemon_id):
+    """route to toggle favoriting a pokemon"""
+    
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+    
+    favorite = Favorite.query.filter_by(pokemon_id=pokemon_id, user_id=g.user.id).first()
+    
+    if favorite:
+        db.session.delete(favorite)
+        pokemon_favorited = False
+    else:
+        new_favorite = Favorite(user_id=g.user.id, pokemon_id=pokemon_id)
+        pokemon_favorited = True
+        db.session.add(new_favorite)
+        
+    db.session.commit()
+    
+    return jsonify({"pokemon_favorited": pokemon_favorited})
+    
 
 ##############################################################################
 # error handling routes:

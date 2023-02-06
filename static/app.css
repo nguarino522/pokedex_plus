@@ -139,12 +139,28 @@ footer {
 }
 
 .like-icon {
-    font-size: 35px;
     color: gray;
 }
 
 .like-icon:hover {
     color: red;
+}
+
+.favorited {
+    font-size: 35px;
+    color: red;
+}
+
+.favorited:hover {
+    color: gray;
+}
+
+.like-icon-large {
+    font-size: 35px;
+}
+
+.like-icon-small {
+    font-size: 22px;
 }
 
 .favorite-button {

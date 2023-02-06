@@ -147,7 +147,6 @@ class Pokemon(db.Model):
                 if effect["language"]["name"] == "en":
                     ability_data[resp["name"]] = effect["effect"]
 
-        print(ability_data)
         return ability_data
 
     @staticmethod
