@@ -50,10 +50,6 @@
                     </div>
                     <div class="col-4 mx-auto">
                         <h5>Abilities</h5>
-                        <!-- <p>{% for ability in pokemon["abilities"] %}
-                            {{ ability['ability']['name'] | capitalize }}
-                            {% endfor %}
-                        </p>                         -->
                         <p>{% for ability in pokemon["abilities"] %}
                             {{ ability['ability']['name'] | capitalize }}
                             <button type="button" class="btn btn-sm pop" data-bs-toggle="popover"
@@ -97,15 +93,6 @@
                                 class="captilize-text detail-type mb-3 badge badge-type-{{ pokemon_db.type2 }}">{{pokemon_db.type2}}</span>
                         </div>
                     </div>
-                    <!-- <div class="col-12">
-                        <h4>Stats:</h4>
-                        <ul class="card-columns" style="column-count: 3;">
-                            {% for stat in pokemon["stats"] %}
-                            <li class="captilize-text mb-3">{{ stat["stat"]["name"] }}: <b>{{ stat["base_stat"]}}</b>
-                            </li>
-                            {% endfor %}
-                        </ul>
-                    </div> -->
                 </div>
             </div>
 
@@ -116,7 +103,6 @@
                         {% if evolutions == "No information found for pokemon's evolutions." %}
                         <p>{{evolutions}}</p>
                         {% else %}
-
                         {% for evolution in evolutions %}
                         {% if evolution == evolutions[0] %}
                         {% else %}
@@ -149,12 +135,10 @@
                             </a>
                         </div>
                         {% endfor %}
-
                         {% endif %}
                     </section>
                 </div>
             </div>
-
 </section>
 
 {% endblock %}
