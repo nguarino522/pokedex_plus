@@ -155,7 +155,7 @@ class Pokemon(db.Model):
 
         species_url = requests.get(f"{BASE_API_URL}/pokemon/{pname}").json()["species"]["url"]
         
-        if requests.get(species_url).json()['evolution_chain']:
+        if requests.get(species_url).json()["evolution_chain"]:
             evolution_url = requests.get(species_url).json()['evolution_chain']['url']
             evolution_chain = requests.get(evolution_url).json()["chain"]
         
@@ -165,8 +165,8 @@ class Pokemon(db.Model):
             def get_evolution_names(evolution_chain):
                 """Extracts evolution names from returned data"""
             
-                evolution_names.append(evolution_chain['species']['name'])
-                for evolution in evolution_chain['evolves_to']:
+                evolution_names.append(evolution_chain["species"]["name"])
+                for evolution in evolution_chain["evolves_to"]:
                     get_evolution_names(evolution)
 
             get_evolution_names(evolution_chain)

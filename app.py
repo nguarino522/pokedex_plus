@@ -159,16 +159,23 @@ def single_pokemon_page(pokemon_name):
         evolutions = []
         for name in evolution_names:
             p = Pokemon.query.filter_by(name=name).first()
-            evolutions.append(p)
+            if p:
+                evolutions.append(p)
+            else:
+                p = Pokemon.query.filter(Pokemon.name.like(f"%{name}%")).all()
+                for p in p:
+                    evolutions.append(p)
 
-    favorite = Favorite.query.filter_by(pokemon_id=pokemon_db.pid, user_id=g.user.id).first()
     fav_pid = None
-    if favorite:
-        fav_pid = pokemon_db.pid
+    if g.user:
+        favorite = Favorite.query.filter_by(pokemon_id=pokemon_db.pid, user_id=g.user.id).first()
+        if favorite:
+            fav_pid = pokemon_db.pid
     
     # ability_facts=ability_facts increases page load time, need to investigate later when polishing 
     # UPDATE through testing others apps will be much quicker in prod
     # UPDATE UPDATE ^ flask-caching is an option which will use as well but issues to work out still
+    print(evolutions)
     return render_template("pokemon/show.html", pokemon=pokemon, pokefact=pokefact, pokemon_db=pokemon_db, ability_facts=ability_facts, evolutions=evolutions, fav_pid=fav_pid)
 
 
