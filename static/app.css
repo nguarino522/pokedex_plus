@@ -19,7 +19,7 @@ footer {
 }
 
 /* .content {
-    min-height: 100vh;
+    height: 100vh;
 } */
 
 .pokedex {
@@ -116,13 +116,11 @@ footer {
 
 .results>.card {
     transition: all 0.2s ease-in-out;
-    /* transition: margin 0.2s ease-in-out; */
 }
 
 .results>.card:hover {
     transform: scale(1.05);
     box-shadow: 0 0 11px rgba(33, 33, 33, 0.2);
-    /* margin-top: -30px; */
 }
 
 .spinner-div {
@@ -160,7 +158,7 @@ footer {
 }
 
 .like-icon-small {
-    font-size: 22px;
+    font-size: 18px;
 }
 
 .favorite-button {
@@ -206,7 +204,7 @@ footer {
 } */
 
 .ability-popout {
-    color:#696969;
+    color: #696969;
 }
 
 .ability-popout:hover {
@@ -216,7 +214,7 @@ footer {
 a.icoGitHub:hover {
     background-color: #171515;
 }
-  
+
 a.icoLinkedin:hover {
     background-color: #007bb7;
 }
@@ -320,3 +318,41 @@ a.icoGoogle:hover {
         opacity: 1;
     }
 }
+
+
+
+/* front page title etc.*/
+
+#hi1 {
+    color: rgb(7, 7, 7);
+    position: relative;
+    right: 50%;
+    transform: translateX(50%);
+    animation-name: fadeBackground;
+    animation-duration: 1.5s;
+}
+
+.light {
+    justify-content: center;
+    --var-color: #d83f3d;
+    font-size: 4rem;
+    color: var(--var-color);
+    position: relative;
+    right: 50%;
+    transform: translateX(50%);
+    animation-name: fadeBackground;
+    animation-duration: 1.5s;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: black;
+}
+
+
+/* team creator page popout once selected */
+
+.selected {
+    transition: all 0.2s ease-in-out;
+    transform: scale(1.05);
+    box-shadow: 0 0 11px rgba(33, 33, 33, 0.2);
+    background-color: #68A090;
+}
+

@@ -1,6 +1,6 @@
 import os
 from flask import Flask, render_template, request, flash, redirect, session, g, jsonify
-from models import connect_db, User, db, Pokemon, Favorite
+from models import connect_db, User, db, Pokemon, Favorite, PokemonTeam, PokemonTeamMember
 from forms import UserAddForm, LoginForm, UserEditProfileForm
 from sqlalchemy.exc import IntegrityError
 from config import BASE_API_URL
@@ -118,7 +118,12 @@ def logout():
 def index_main():
     """main landing page"""
 
-    return render_template("index.html")
+    pokemons = []
+    for x in range(3):
+        p = Pokemon.get_random_pokemon()
+        pokemons.append(p)
+    
+    return render_template("index.html", user=g.user, pokemons=pokemons)
 
 
 ##############################################################################
@@ -133,8 +138,11 @@ def main_pokemon_page(page_num):
     if not pokemons:
         return render_template("404.html"), 404
 
-    return render_template("pokemon/index.html", pokemons=pokemons, page_num=page_num, total_pages=total_pages)
-
+    if g.user:
+        fav_ids = Favorite.get_all_favorited_pokemon_ids(g.user)
+        return render_template("pokemon/index.html", pokemons=pokemons, page_num=page_num, total_pages=total_pages, fav_ids=fav_ids)
+    else:
+        return render_template("pokemon/index.html", pokemons=pokemons, page_num=page_num, total_pages=total_pages)
 
 # added in flask-caching support to help cache routes and increase performance
 # for now 5 minute timeout on cache, may do infinite after, 
@@ -152,19 +160,7 @@ def single_pokemon_page(pokemon_name):
     pokemon = Pokemon.retrieve_pokemon_data(pokemon_name)
     pokefact = Pokemon.get_random_pokemon_fact(pokemon_name)
     ability_facts = Pokemon.get_pokemon_ability_data(pokemon_name)
-    evolution_names = Pokemon.get_evolution_data(pokemon_name)
-    if evolution_names == "No information found for pokemon's evolutions.":
-        evolutions = evolution_names
-    else:
-        evolutions = []
-        for name in evolution_names:
-            p = Pokemon.query.filter_by(name=name).first()
-            if p:
-                evolutions.append(p)
-            else:
-                p = Pokemon.query.filter(Pokemon.name.like(f"%{name}%")).all()
-                for p in p:
-                    evolutions.append(p)
+    evolutions = Pokemon.get_evolution_data(pokemon_name)
 
     fav_pid = None
     if g.user:
@@ -175,7 +171,6 @@ def single_pokemon_page(pokemon_name):
     # ability_facts=ability_facts increases page load time, need to investigate later when polishing 
     # UPDATE through testing others apps will be much quicker in prod
     # UPDATE UPDATE ^ flask-caching is an option which will use as well but issues to work out still
-    print(evolutions)
     return render_template("pokemon/show.html", pokemon=pokemon, pokefact=pokefact, pokemon_db=pokemon_db, ability_facts=ability_facts, evolutions=evolutions, fav_pid=fav_pid)
 
 
@@ -185,8 +180,9 @@ def pokedex_search():
 
     search = request.args.get('q')
     pokemons = Pokemon.query.filter(Pokemon.name.like(f"%{search}%")).all()
-
-    return render_template("pokemon/search.html", pokemons=pokemons)
+    fav_ids = Favorite.get_all_favorited_pokemon_ids(g.user)
+    
+    return render_template("pokemon/search.html", pokemons=pokemons, fav_ids=fav_ids)
 
 
 ##############################################################################
@@ -222,12 +218,15 @@ def user_favorites(user_id):
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
+    
     pokemons = []
     for favorite in g.user.favorites:
         p = Pokemon.query.filter_by(pid=favorite.pokemon_id).first()
         pokemons.append(p)
     
-    return render_template("users/favorites.html", pokemons=pokemons)
+    fav_ids = Favorite.get_all_favorited_pokemon_ids(g.user)
+    
+    return render_template("users/favorites.html", pokemons=pokemons, fav_ids=fav_ids)
 
 @app.route('/users/toggle_favorite/<int:pokemon_id>', methods=["GET", "POST"])
 def toggle_favorite(pokemon_id):
@@ -250,6 +249,58 @@ def toggle_favorite(pokemon_id):
     db.session.commit()
     
     return jsonify({"pokemon_favorited": pokemon_favorited})
+    
+
+##############################################################################
+# tools routes:
+
+@app.route('/tools/team_creator')
+def tool_team_creator():
+    """route for team creator tool based user and their favorites"""
+    
+    if not g.user:
+        flash("Access unauthorized. Please create an account and log in to use this tool.", "danger")
+        return redirect("/")
+    
+    pokemons = []
+    for favorite in g.user.favorites:
+        p = Pokemon.query.filter_by(pid=favorite.pokemon_id).first()
+        pokemons.append(p)
+    
+    return render_template("tools/team_creator.html", pokemons=pokemons)
+
+@app.route('/tools/<int:user_id>/create_team', methods=["POST"])
+def create_pokemon_team(user_id):
+    """route to create a new pokemon team for user"""
+    
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+    
+    pokemon_ids = request.form["pokemon_ids_text"].split()
+    result = PokemonTeam.check_if_all_pokemon_ids_valid(pokemon_ids)
+    
+    if len(pokemon_ids) == 0:
+        flash("Please select at least one Pokémon to create a team.", "danger")
+        return redirect("/tools/team_creator")
+    elif len(pokemon_ids) > 6:
+        flash("Please select no more than 6 Pokémon to create a team.", "danger")
+        return redirect("/tools/team_creator")
+    elif not result:
+        flash("ERROR: invalid input or Pokémon. Please retry...", "danger")
+        return redirect("/tools/team_creator")
+    else:
+        new_pokemon_team = PokemonTeam(user_id=user_id)
+        db.session.add(new_pokemon_team)
+        db.session.commit()
+        
+        for pid in pokemon_ids:
+            new_pokemon_team_member = PokemonTeamMember(pokemon_team_id=new_pokemon_team.id, pokemon_id=pid)
+            db.session.add(new_pokemon_team_member)
+        db.session.commit()
+        
+        flash("Pokémon team has been successfully created!", "success")
+        return redirect("/tools/team_creator")
     
 
 ##############################################################################

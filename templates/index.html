@@ -3,6 +3,49 @@
 
 {% block content %}
 
-<h1 class="text-center">Welcome to the Pokedex Plus app!</h1>
+<div class="row text-center align-items-center title-index-head" id="index">
+    <div>
+        <!-- <h2 id="hi1">Hello, welcome to the...</h2> -->
+        <div class="light" data-text="Welcome to the Pokédex Plus app!">Welcome to the Pokédex Plus app!</div>
+        <h2 id="hi1">A Pokédex application with team creation and win probability tools and more! </h2>
+    </div>
+</div>
+
+<section class="results row d-flex justify-content-center" id="hi1">
+    {% for pokemon in pokemons %}
+
+    <div class="card col-xl-2 col-lg-3 col-md-3 col-sm-5 mx-3 my-4">
+        <a href="/pokedex/pokemon/{{ pokemon.name }}" class="text-decoration-none text-dark" id="pokemonSingleLink">
+            <div class="m-3 my-4">
+                <figure>
+                    <img src="{{ pokemon.image_url }}" alt="bulbasaur image" title="bulbasaur"
+                        class="image img-fluid pokemon-card">
+                </figure>
+                <div class="pokemon-info">
+                    <p class="id">
+                        <span class="number-prefix">#{{ pokemon.pid }}</span>
+                    </p>
+                    <h3 class="captilize-text">{{ pokemon.name }}</h3>
+                    <div class="abilities">
+
+                        <span class="captilize-text me-2 badge badge-type-{{ pokemon.type1 }}">{{ pokemon.type1
+                            }}</span>
+
+                        <span class="captilize-text me-2 badge badge-type-{{ pokemon.type2 }}">{{ pokemon.type2
+                            }}</span>
+
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    {% endfor %}
+
+    <div class="text-center">
+        <a class="btn btn-warning search-btn mx-2" href="/pokedex/1">View Pokédex!</a>
+    </div>
+</section>
+
 
 {% endblock %}

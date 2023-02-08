@@ -19,6 +19,7 @@ def connect_db(app):
     db.init_app(app)
 
 
+# User class
 class User(db.Model):
     """users model"""
 
@@ -75,6 +76,8 @@ class User(db.Model):
         return False
 
 
+
+# Pokemon class
 class Pokemon(db.Model):
     """pokemon model"""
 
@@ -170,11 +173,37 @@ class Pokemon(db.Model):
                     get_evolution_names(evolution)
 
             get_evolution_names(evolution_chain)
-            return evolution_names
+            
+            if evolution_names == "No information found for pokemon's evolutions.":
+                evolutions = evolution_names
+            else:
+                evolutions = []
+                for name in evolution_names:
+                    p = Pokemon.query.filter_by(name=name).first()
+                    if p:
+                        evolutions.append(p)
+                    else:
+                        p = Pokemon.query.filter(Pokemon.name.like(f"%{name}%")).all()
+                        for p in p:
+                            evolutions.append(p)
+            
+            return evolutions
         
         else:
             return "No information found for pokemon's evolutions."
 
+    @staticmethod
+    def get_random_pokemon():
+        """grab a random pokemon from db"""
+        
+        all_pokemon = Pokemon.query.all()
+        random_pokemon = random.choice(all_pokemon)
+        
+        return random_pokemon
+
+
+
+# Favorite class
 class Favorite(db.Model):
     """favories model"""
 
@@ -185,7 +214,20 @@ class Favorite(db.Model):
         "users.id", ondelete="cascade"))
     pokemon_id = db.Column(db.Integer, db.ForeignKey("pokemon.pid"))
 
+    @staticmethod
+    def get_all_favorited_pokemon_ids(user):
+        """retrieve all user's favorited pokemon"""
 
+        favorited_pokemon = user.favorites
+        fav_pokemon_ids = []
+        
+        for pokemon in favorited_pokemon:
+            fav_pokemon_ids.append(pokemon.pokemon_id)
+            
+        return fav_pokemon_ids
+
+
+# PokemonTeam class
 class PokemonTeam(db.Model):
     """pokemon teams model"""
 
@@ -197,7 +239,29 @@ class PokemonTeam(db.Model):
     team_members = db.relationship(
         "PokemonTeamMember", backref="team", cascade="all, delete-orphan")
 
+    @staticmethod
+    def check_if_all_pokemon_ids_valid(pokemon_ids):
+        """check if all ids are valid numbers and in the database"""
+        
+        valid_num_result = all(pid.isdigit() for pid in pokemon_ids)
+        valid_db_result = False
+        for pid in pokemon_ids:
+            p = Pokemon.query.filter_by(pid=pid).first()
+            if p:
+                valid_db_result = True
+            else:
+                valid_db_result = False
+        
+        if valid_db_result and valid_num_result:
+            result = True
+        else:
+            result = False
+        
+        return result
+    
+    
 
+# PokemonTeamMember class
 class PokemonTeamMember(db.Model):
     """pokemon teams members model"""
 

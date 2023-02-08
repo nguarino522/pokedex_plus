@@ -15,10 +15,11 @@
                     </h1>
                 </div>
                 <div class="favorite-button col-1">
-                    <button class="btn btn-sm"><i
-                            class="fa fa-heart {% if fav_pid == pokemon_db.pid %}favorited{% else %}like-icon{% endif %} like-icon-large"
-                            data-id="{{ pokemon_db.pid }}">
-                        </i></button>
+                    <button class="btn btn-sm">
+                        <i class="fa fa-heart {% if fav_pid == pokemon_db.pid %}favorited{% else %}like-icon{% endif %} like-icon-large favorite-icon-normal" 
+                        data-id="{{ pokemon_db.pid }}">
+                        </i>
+                    </button>
                 </div>
             </div>
             <div class="header row m-4">

@@ -30,12 +30,18 @@
             <a href="/pokedex/pokemon/{{ pokemon.name }}" class="text-decoration-none text-dark">
                 <div class="m-3 my-4">
                     <figure>
-                        <img src="{{ pokemon.image_url }}" alt="bulbasaur image" title="bulbasaur"
+                        <img src="{{ pokemon.image_url }}" alt="{{ pokemon.name }} image" title="{{ pokemon.name }}"
                             class="image img-fluid" style="border-radius:5px;background-color:rgb(242, 242, 242);">
                     </figure>
                     <div class="pokemon-info">
                         <p class="id">
-                            <span class="number-prefix">#{{ pokemon.pid }}</span>
+                            <span class="number-prefix">#{{ pokemon.pid }}
+                                <button class="btn btn-sm">
+                                    <i class="fa fa-heart {% if pokemon.pid not in fav_ids %}like-icon{% else %}favorited{% endif %} like-icon-small favorite-icon-normal"
+                                    data-id="{{ pokemon.pid }}">
+                                    </i>
+                                </button>
+                            </span>
                         </p>
                         <h3 class="captilize-text">{{ pokemon.name }}</h3>
                         <div class="abilities">

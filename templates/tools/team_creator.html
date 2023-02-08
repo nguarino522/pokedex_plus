@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block title %}Pokémon Team Creator{% endblock %}
+
+{% block content %}
+
+<div class="fadein-animation alert alert-custom">
+    <h1 class="text-center">Pokémon Team Creator!</h1>
+    <p class="text-center">
+        Create a pokemon team by selecting up to 6 Pokémon from your favorited Pokémon below.
+        Once they are selected hit the submit button to create the team! 
+        To edit teams, please visit your saved teams page under the profile drop down.
+    </p>
+    <form method="POST" action="/tools/{{g.user.id}}/create_team">
+        <div class="text-center my-3 fadein-animation">
+            <input hidden type="text" name="pokemon_ids_text" value="" id="pokemon_ids">
+            <button type="submit" class="btn btn-warning search-btn mx-2 submit-btn-team-create">Submit!</button>
+        </div>
+    </form>
+</div>
+
+<div class="row">
+
+    <section class="results row d-flex justify-content-center">
+        {% for pokemon in pokemons %}
+
+        <div class="card col-xl-2 col-lg-3 col-md-3 col-sm-5 mx-3 my-4 team-creator-card" data-id="{{ pokemon.pid }}">
+            <a href="/pokedex/pokemon/{{ pokemon.name }}" class="text-decoration-none text-dark" id="pokemonSingleLink">
+                <div class="m-3 my-4">
+                    <figure>
+                        <img src="{{ pokemon.image_url }}" alt="{{ pokemon.name }} image" title="{{ pokemon.name }}"
+                            class="image img-fluid pokemon-card">
+                    </figure>
+                    <div class="pokemon-info">
+                        <p class="id">
+                            <span class="number-prefix">#{{ pokemon.pid }}
+                            </span>
+                        </p>
+                        <h3 class="captilize-text">{{ pokemon.name }}</h3>
+                        <div class="abilities">
+                            <span class="captilize-text me-2 badge badge-type-{{ pokemon.type1 }}">{{
+                                pokemon.type1}}</span>
+                            <span class="captilize-text me-2 badge badge-type-{{ pokemon.type2 }}">{{
+                                pokemon.type2}}</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        {% endfor %}
+    </section>
+
+</div>
+
+{% endblock %}

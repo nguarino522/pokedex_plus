@@ -4,7 +4,7 @@
 {% block content %}
 
 <div class="fadein-animation alert alert-custom">
-    <h1 class="text-center">Search the Pokédex for a Pokemon!</h1>
+    <h1 class="text-center">Search the Pokédex for a Pokémon!</h1>
     <form class="d-flex m-2" action="/pokedex/search">
         <input class="form-control me-2" type="search" placeholder="Search Pokédex with search term (text only)"
             aria-label="Search" name="q">
@@ -27,17 +27,22 @@
 
     <section class="results row d-flex justify-content-center">
         {% for pokemon in pokemons %}
-
         <div class="card col-xl-2 col-lg-3 col-md-3 col-sm-5 mx-3 my-4">
-            <a href="/pokedex/pokemon/{{ pokemon.name }}" class="text-decoration-none text-dark" id="pokemonSingleLink">
+            <a href="/pokedex/pokemon/{{ pokemon['name'] }}" class="text-decoration-none text-dark" id="pokemonSingleLink">
                 <div class="m-3 my-4">
                     <figure>
-                        <img src="{{ pokemon.image_url }}" alt="bulbasaur image" title="bulbasaur"
+                        <img src="{{ pokemon.image_url }}" alt="{{ pokemon['name'] }} image" title="{{ pokemon['name'] }}"
                             class="image img-fluid pokemon-card">
                     </figure>
                     <div class="pokemon-info">
                         <p class="id">
-                            <span class="number-prefix">#{{ pokemon.pid }}</span>
+                            <span class="number-prefix">#{{ pokemon.pid }}
+                                <button class="btn btn-sm">
+                                    <i class="fa fa-heart {% if pokemon.pid not in fav_ids %}like-icon{% else %}favorited{% endif %} like-icon-small favorite-icon-normal" 
+                                    data-id="{{ pokemon.pid }}">
+                                    </i>
+                                </button>
+                            </span>
                         </p>
                         <h3 class="captilize-text">{{ pokemon.name }}</h3>
                         <div class="abilities">
@@ -51,7 +56,6 @@
                 </div>
             </a>
         </div>
-
         {% endfor %}
     </section>
 
