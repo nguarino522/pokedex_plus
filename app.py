@@ -4,12 +4,12 @@ from models import connect_db, User, db, Pokemon, Favorite, PokemonTeam, Pokemon
 from forms import UserAddForm, LoginForm, UserEditProfileForm
 from sqlalchemy.exc import IntegrityError
 from config import BASE_API_URL
-import math, requests
+import math, requests, random
 from flask_caching import Cache
 
 CURR_USER_KEY = "curr_user"
 
-cache = Cache(config={'CACHE_TYPE': 'SimpleCache'})
+cache = Cache(config={"CACHE_TYPE": "FileSystemCache", "CACHE_DIR": "app_cache"})
 app = Flask(__name__)
 cache.init_app(app)
 
@@ -144,12 +144,10 @@ def main_pokemon_page(page_num):
     else:
         return render_template("pokemon/index.html", pokemons=pokemons, page_num=page_num, total_pages=total_pages)
 
-# added in flask-caching support to help cache routes and increase performance
-# for now 5 minute timeout on cache, may do infinite after, 
-# the problem is that once cached it won't get a differen pokemon fact based on how it grabs it currently
-# woudl have to move some of the code from model to here in route maybe????? ....
+
+
+# caching items but not sure if persistence working --> seems like it? unless maybe I make a change here in app.py... ?idk
 @app.route('/pokedex/pokemon/<pokemon_name>')
-#@cache.cached(timeout=60)
 def single_pokemon_page(pokemon_name):
     """view a single pokemon entry"""
 
@@ -157,21 +155,24 @@ def single_pokemon_page(pokemon_name):
     if not pokemon_db:
         return render_template("404.html"), 404
 
-    pokemon = Pokemon.retrieve_pokemon_data(pokemon_name)
-    pokefact = Pokemon.get_random_pokemon_fact(pokemon_name)
-    ability_facts = Pokemon.get_pokemon_ability_data(pokemon_name)
-    evolutions = Pokemon.get_evolution_data(pokemon_name)
-
     fav_pid = None
     if g.user:
         favorite = Favorite.query.filter_by(pokemon_id=pokemon_db.pid, user_id=g.user.id).first()
         if favorite:
             fav_pid = pokemon_db.pid
     
-    # ability_facts=ability_facts increases page load time, need to investigate later when polishing 
-    # UPDATE through testing others apps will be much quicker in prod
-    # UPDATE UPDATE ^ flask-caching is an option which will use as well but issues to work out still
-    return render_template("pokemon/show.html", pokemon=pokemon, pokefact=pokefact, pokemon_db=pokemon_db, ability_facts=ability_facts, evolutions=evolutions, fav_pid=fav_pid)
+    pokemon_cache = cache.get(pokemon_name)
+    if pokemon_cache is None:
+        pokemon = Pokemon.retrieve_pokemon_data(pokemon_name)
+        pokefacts = Pokemon.get_pokemon_facts(pokemon_name)
+        ability_facts = Pokemon.get_pokemon_ability_data(pokemon_name)
+        evolutions = Pokemon.get_evolution_data(pokemon_name)
+        cache.set(pokemon_name, {"pokemon": pokemon, "pokefacts": pokefacts, "ability_facts": ability_facts, "evolutions": evolutions})
+        pokefact = random.choice(pokefacts)
+        return render_template("pokemon/show.html", pokemon=pokemon, pokefact=pokefact, pokemon_db=pokemon_db, ability_facts=ability_facts, evolutions=evolutions, fav_pid=fav_pid)
+    else:
+        pokefact = random.choice(pokemon_cache["pokefacts"])
+        return render_template("pokemon/show.html", pokemon=pokemon_cache["pokemon"], pokefact=pokefact, pokemon_db=pokemon_db, ability_facts=pokemon_cache["ability_facts"], evolutions=pokemon_cache["evolutions"], fav_pid=fav_pid)
 
 
 @app.route('/pokedex/search')

@@ -109,7 +109,7 @@ class Pokemon(db.Model):
         return resp
 
     @staticmethod
-    def get_random_pokemon_fact(pname):
+    def get_pokemon_facts(pname):
         """grab a random pokemon fact to display"""
 
         species_url = requests.get(
@@ -122,10 +122,11 @@ class Pokemon(db.Model):
                 random_facts.append(fact["flavor_text"].replace("\x0c", " "))
 
         if random_facts:
-            random_fact = random.choice(random_facts)
-            return random_fact
+            # random_fact = random.choice(random_facts)
+            return random_facts
         else:
             return "No information for this pokemon found."
+
 
     @staticmethod
     def get_pokemon_ability_data(pname):
@@ -251,7 +252,7 @@ class PokemonTeam(db.Model):
             result = False
         
         return result
-    
+
     
 
 # PokemonTeamMember class

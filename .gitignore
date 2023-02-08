@@ -1,2 +1,7 @@
 venv
 __pycache__
+
+# exclude everything in app_cache
+app_cache/*
+# except blank file to get the directory committed as flask-caching will use this directory as cache
+!app_cache/.gitkeep 
