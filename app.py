@@ -213,7 +213,7 @@ def user_profile():
 
 @app.route('/users/<int:user_id>/favorites')
 def user_favorites(user_id):
-    """Show user favorited pokemon"""
+    """show user favorited pokemon"""
 
     if not g.user:
         flash("Access unauthorized.", "danger")
@@ -249,7 +249,31 @@ def toggle_favorite(pokemon_id):
     db.session.commit()
     
     return jsonify({"pokemon_favorited": pokemon_favorited})
+
+@app.route('/users/<int:user_id>/saved_teams')
+def user_saved_teams(user_id):
+    """show user saved teams"""
     
+    pokemon_teams = PokemonTeam.query.filter_by(user_id=user_id).all()
+    
+    return render_template("users/teams.html", pokemon_teams=pokemon_teams)
+
+@app.route('/users/<int:user_id>/delete_team/<int:team_id>', methods=["POST"])
+def delete_user_saved_teams(user_id, team_id):
+    """delete saved user team"""
+    
+    if not g.user or not g.user.id == user_id:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+    
+    pokemon_team = PokemonTeam.query.get(team_id)
+    db.session.delete(pokemon_team)
+    db.session.commit()
+    
+    flash("Pokémon has been successfully deleted!", "success")
+    return redirect(f"/users/{user_id}/saved_teams")
+
+
 
 ##############################################################################
 # tools routes:
@@ -273,7 +297,7 @@ def tool_team_creator():
 def create_pokemon_team(user_id):
     """route to create a new pokemon team for user"""
     
-    if not g.user:
+    if not g.user.id == user_id:
         flash("Access unauthorized.", "danger")
         return redirect("/")
     

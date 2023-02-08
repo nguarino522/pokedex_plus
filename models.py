@@ -29,12 +29,9 @@ class User(db.Model):
     email = db.Column(db.Text, nullable=False, unique=True)
     username = db.Column(db.Text, nullable=False, unique=True)
     password = db.Column(db.Text, nullable=False)
-    profile_img_url = db.Column(
-        db.Text, nullable=True, default=DEFAULT_AVATAR_IMG)
-    favorites = db.relationship(
-        "Favorite", backref="user", cascade="all, delete-orphan")
-    pokemon_teams = db.relationship(
-        "PokemonTeam", backref="user", cascade="all, delete-orphan")
+    profile_img_url = db.Column(db.Text, nullable=True, default=DEFAULT_AVATAR_IMG)
+    favorites = db.relationship("Favorite", backref="user", cascade="all, delete-orphan")
+    pokemon_teams = db.relationship("PokemonTeam", backref="user", cascade="all, delete-orphan")
 
     def __repr__(self):
         return f"<User #{self.id}: {self.username}, {self.email}>"
@@ -85,8 +82,7 @@ class Pokemon(db.Model):
 
     pid = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.Text, nullable=False, unique=True)
-    image_url = db.Column(db.Text, nullable=False,
-                          default=DEFAULT_NO_POKEMON_IMG)
+    image_url = db.Column(db.Text, nullable=False,default=DEFAULT_NO_POKEMON_IMG)
     type1 = db.Column(db.Text, nullable=False)
     type2 = db.Column(db.Text, nullable=True)
 
@@ -210,8 +206,7 @@ class Favorite(db.Model):
     __tablename__ = "favorites"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    user_id = db.Column(db.Integer, db.ForeignKey(
-        "users.id", ondelete="cascade"))
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id", ondelete="cascade"))
     pokemon_id = db.Column(db.Integer, db.ForeignKey("pokemon.pid"))
 
     @staticmethod
@@ -234,10 +229,8 @@ class PokemonTeam(db.Model):
     __tablename__ = "pokemon_teams"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    user_id = db.Column(db.Integer, db.ForeignKey(
-        "users.id", ondelete="cascade"))
-    team_members = db.relationship(
-        "PokemonTeamMember", backref="team", cascade="all, delete-orphan")
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id", ondelete="cascade"))
+    team_members = db.relationship("PokemonTeamMember", backref="team", cascade="all, delete-orphan")
 
     @staticmethod
     def check_if_all_pokemon_ids_valid(pokemon_ids):
@@ -269,5 +262,15 @@ class PokemonTeamMember(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     pokemon_id = db.Column(db.Integer, db.ForeignKey("pokemon.pid"))
-    pokemon_team_id = db.Column(db.Integer, db.ForeignKey(
-        "pokemon_teams.id", ondelete="cascade"))
+    pokemon_team_id = db.Column(db.Integer, db.ForeignKey("pokemon_teams.id", ondelete="cascade"))
+    pokemon = db.relationship("Pokemon")
+
+    @staticmethod
+    def get_all_pokemon_team_members(pokemon_team):
+        """get all pokemon team members apart of a pokemon team"""
+        
+        pokemon_team_members = PokemonTeamMember.query.filter_by(pokemon_team_id=pokemon_team.id).all()
+        print(pokemon_team_members)
+        
+        return pokemon_team_members
+    
