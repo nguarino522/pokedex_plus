@@ -3,7 +3,7 @@
 import os
 from unittest import TestCase
 from sqlalchemy import exc
-from models import connect_db, User, db, Pokemon, Favorite, PokemonTeam, PokemonTeamMember
+from models import connect_db, User, db
 
 # BEFORE importing app, set an environmental variable to use a different database for tests
 os.environ['DATABASE_URL'] = "postgresql:///pokedex_plus_test"
@@ -52,7 +52,6 @@ class UserModelTestCase(TestCase):
         with app.app_context():
             res = super().tearDown()
             User.query.delete()
-            Favorite.query.delete()
             db.session.rollback()
             # db.drop_all()
             return res
