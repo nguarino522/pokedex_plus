@@ -1,7 +1,6 @@
 """User View tests."""
 
 import os
-#from seed import seed_pokemon_table_data_text_db
 from unittest import TestCase
 from models import connect_db, User, db, Pokemon, Favorite, PokemonTeam, PokemonTeamMember
 
@@ -29,7 +28,7 @@ class UserViewTestCase(TestCase):
         """Create test client, add sample data."""
 
         with app.app_context():
-            #db.drop_all()
+            
             db.create_all()
             User.query.delete()
             Favorite.query.delete()
@@ -52,12 +51,12 @@ class UserViewTestCase(TestCase):
             User.query.delete()
             Favorite.query.delete()
             db.session.rollback()
-            #db.drop_all()
             return res
     
     
     def test_homepage(self):
         """homepage or landing page test"""
+        
         with self.client as client:
             resp = client.get("/")
             html = resp.get_data(as_text=True)
@@ -73,6 +72,7 @@ class UserViewTestCase(TestCase):
             
     def test_edit_profile_page(self):
         """testing edit profile"""
+        
         with self.client as client:
             resp = client.get("/users/profile", follow_redirects=True)
             self.assertEqual(resp.status_code, 200)
