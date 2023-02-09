@@ -181,9 +181,11 @@ def pokedex_search():
 
     search = request.args.get('q')
     pokemons = Pokemon.query.filter(Pokemon.name.like(f"%{search}%")).all()
-    fav_ids = Favorite.get_all_favorited_pokemon_ids(g.user)
-    
-    return render_template("pokemon/search.html", pokemons=pokemons, fav_ids=fav_ids)
+    if g.user:
+        fav_ids = Favorite.get_all_favorited_pokemon_ids(g.user)
+        return render_template("pokemon/search.html", pokemons=pokemons, fav_ids=fav_ids)
+    else:
+        return render_template("pokemon/search.html", pokemons=pokemons)
 
 
 ##############################################################################

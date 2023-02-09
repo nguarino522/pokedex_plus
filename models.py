@@ -102,7 +102,7 @@ class Pokemon(db.Model):
         """retrieve all data to populate pokemon table in DB"""
 
         total_num_pokemon = requests.get(
-            f"BASE_API_URL/pokemon").json()["count"]
+            f"{BASE_API_URL}/pokemon").json()["count"]
         resp = requests.get(
             f"{BASE_API_URL}/pokemon?limit={total_num_pokemon}").json()
 
