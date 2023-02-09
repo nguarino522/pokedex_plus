@@ -26,10 +26,11 @@ with app.app_context():
 #     image_url = resp["sprites"]["other"]["official-artwork"]["front_shiny"]
 #     print(image_url)
 
-def seed_pokemon_table_data_text_db():
-    """method to seed into test db during setup"""
+# def seed_pokemon_table_data_text_db():
+#     """method to seed into test db during setup"""
     
-    db.engine.excute("test_db_pokemon_table_seed.sql")
+#     resp = Pokemon.retrieve_all_pokemon_data()
+#     db.engine.excute("test_db_pokemon_table_seed.sql")
     
 
 

@@ -32,6 +32,7 @@ class UserViewTestCase(TestCase):
             #db.drop_all()
             db.create_all()
             User.query.delete()
+            Favorite.query.delete()
 
             u = User.signup("testuser", "test@test.com", "HASHED_PASSWORD", None)
             uid = 1
@@ -49,6 +50,7 @@ class UserViewTestCase(TestCase):
         with app.app_context():
             res = super().tearDown()
             User.query.delete()
+            Favorite.query.delete()
             db.session.rollback()
             #db.drop_all()
             return res
@@ -97,3 +99,66 @@ class UserViewTestCase(TestCase):
             u = User.query.get(1)
             self.assertEqual(u.username, "testuser5")
     
+    
+    def test_user_favorites_page(self):
+        """testing user favoriting pokemon"""
+        
+        with self.client as client:
+            resp = client.get(f"/users/{1}/favorites", follow_redirects=True)
+            self.assertEqual(resp.status_code, 200)
+            self.assertIn("Access unauthorized.", str(resp.data))
+            
+        with self.client as client:
+            with client.session_transaction() as session:
+                session[CURR_USER_KEY] = self.uid
+            resp = client.get(f"/users/{1}/favorites", follow_redirects=True)
+            self.assertEqual(resp.status_code, 200)
+            self.assertIn("Here are your current favorited", str(resp.data))
+    
+    
+    def test_favoriting_pokemon(self):
+        """testing user favoriting pokemon"""
+        
+        with self.client as client:
+            with client.session_transaction() as session:
+                session[CURR_USER_KEY] = self.uid
+            resp = client.get(f"/users/toggle_favorite/{1}")
+            self.assertEqual(resp.json, {"pokemon_favorited": True})
+        
+        with self.client as client:
+            with client.session_transaction() as session:
+                session[CURR_USER_KEY] = self.uid
+            resp = client.get(f"/users/{1}/favorites")
+            self.assertEqual(resp.status_code, 200)
+            self.assertIn("Here are your current favorited", str(resp.data))
+            self.assertIn("bulbasaur", str(resp.data))
+        
+        with self.client as client:
+            with client.session_transaction() as session:
+                session[CURR_USER_KEY] = self.uid
+            resp = client.get(f"/users/toggle_favorite/{1}")
+            self.assertEqual(resp.json, {"pokemon_favorited": False})
+        
+        with self.client as client:
+            with client.session_transaction() as session:
+                session[CURR_USER_KEY] = self.uid
+            resp = client.get(f"/users/{1}/favorites")
+            self.assertEqual(resp.status_code, 200)
+            self.assertNotIn("Bulbasaur", str(resp.data))
+            
+            
+    def test_saved_teams_page(self):
+        """testing user saved teams page"""
+        
+        with self.client as client:
+            resp = client.get(f"/users/{1}/saved_teams", follow_redirects=True)
+            self.assertEqual(resp.status_code, 200)
+            self.assertIn("Access unauthorized.", str(resp.data))
+            
+        with self.client as client:
+            with client.session_transaction() as session:
+                session[CURR_USER_KEY] = self.uid
+            resp = client.get(f"/users/{1}/saved_teams")
+            self.assertEqual(resp.status_code, 200)
+            
+        # saved team functionality might need to add stuff to page still, not sure about testing creating a team or not

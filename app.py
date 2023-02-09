@@ -256,6 +256,11 @@ def toggle_favorite(pokemon_id):
 @app.route('/users/<int:user_id>/saved_teams')
 def user_saved_teams(user_id):
     """show user saved teams"""
+    print(g.user.id, user_id)
+    #if g.user.id != user_id:
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
     
     pokemon_teams = PokemonTeam.query.filter_by(user_id=user_id).all()
     
