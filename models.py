@@ -266,12 +266,4 @@ class PokemonTeamMember(db.Model):
     pokemon_team_id = db.Column(db.Integer, db.ForeignKey("pokemon_teams.id", ondelete="cascade"))
     pokemon = db.relationship("Pokemon")
 
-    @staticmethod
-    def get_all_pokemon_team_members(pokemon_team):
-        """get all pokemon team members apart of a pokemon team"""
-        
-        pokemon_team_members = PokemonTeamMember.query.filter_by(pokemon_team_id=pokemon_team.id).all()
-        print(pokemon_team_members)
-        
-        return pokemon_team_members
     

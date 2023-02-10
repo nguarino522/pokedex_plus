@@ -22,6 +22,7 @@ class FavoriteModelTestCase(TestCase):
         with app.app_context():
             db.create_all()
             User.query.delete()
+            Favorite.query.delete()
             
             u = User.signup("testuser", "test@test.com", "HASHED_PASSWORD", None)
             uid = 1
@@ -46,6 +47,7 @@ class FavoriteModelTestCase(TestCase):
         with app.app_context():
             res = super().tearDown()
             User.query.delete()
+            Favorite.query.delete()
             db.session.rollback()
             return res
         

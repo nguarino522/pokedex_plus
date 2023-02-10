@@ -2,7 +2,7 @@
 
 import os
 from unittest import TestCase
-from models import connect_db, User, db, Pokemon, Favorite, PokemonTeam, PokemonTeamMember
+from models import connect_db, User, db, Pokemon
 
 # BEFORE importing app, set an environmental variable to use a different database for tests
 os.environ['DATABASE_URL'] = "postgresql:///pokedex_plus_test"
@@ -86,6 +86,8 @@ class PokemonModelTestCase(TestCase):
         ability_facts = Pokemon.get_pokemon_ability_data(self.p1.name)
         self.assertIsNotNone(ability_facts)
         self.assertIsInstance(ability_facts, dict)
+        self.assertEqual("overgrow" in ability_facts, True)
+        self.assertEqual("chlorophyll" in ability_facts, True)
         
     def test_get_evolution_data(self):
         """testing get pokemon facts method"""
@@ -102,4 +104,4 @@ class PokemonModelTestCase(TestCase):
         with app.app_context():
             pokemon = Pokemon.get_random_pokemon()
             self.assertIsNotNone(pokemon)
-            self.assertIsInstance(pokemon, object)
+            self.assertIsInstance(pokemon, Pokemon)

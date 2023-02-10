@@ -214,8 +214,8 @@ def user_profile():
 
     return render_template("users/edit.html", form=form, user_id=g.user.id)
 
-@app.route('/users/<int:user_id>/favorites')
-def user_favorites(user_id):
+@app.route('/users/favorites')
+def user_favorites():
     """show user favorited pokemon"""
 
     if not g.user:
@@ -253,33 +253,37 @@ def toggle_favorite(pokemon_id):
     
     return jsonify({"pokemon_favorited": pokemon_favorited})
 
-@app.route('/users/<int:user_id>/saved_teams')
-def user_saved_teams(user_id):
+@app.route('/users/saved_teams')
+def user_saved_teams():
     """show user saved teams"""
-    print(g.user.id, user_id)
-    #if g.user.id != user_id:
+    
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
     
-    pokemon_teams = PokemonTeam.query.filter_by(user_id=user_id).all()
+    pokemon_teams = PokemonTeam.query.filter_by(user_id=g.user.id).all()
     
     return render_template("users/teams.html", pokemon_teams=pokemon_teams)
 
-@app.route('/users/<int:user_id>/delete_team/<int:team_id>', methods=["POST"])
-def delete_user_saved_teams(user_id, team_id):
+@app.route('/users/delete_team/<int:team_id>', methods=["POST"])
+def delete_user_saved_teams(team_id):
     """delete saved user team"""
     
-    if not g.user or not g.user.id == user_id:
+    #if not g.user or not g.user.id == user_id:
+    if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
     
-    pokemon_team = PokemonTeam.query.get(team_id)
+    pokemon_team = PokemonTeam.query.filter_by(id=team_id, user_id=g.user.id).first()
+    if not pokemon_team:
+        flash("ERROR: No team found with that id!", "danger")
+        return redirect("/users/saved_teams")
+    
     db.session.delete(pokemon_team)
     db.session.commit()
     
     flash("Pokémon has been successfully deleted!", "success")
-    return redirect(f"/users/{user_id}/saved_teams")
+    return redirect(f"/users/saved_teams")
 
 
 
@@ -301,11 +305,11 @@ def tool_team_creator():
     
     return render_template("tools/team_creator.html", pokemons=pokemons)
 
-@app.route('/tools/<int:user_id>/create_team', methods=["POST"])
-def create_pokemon_team(user_id):
+@app.route('/tools/create_team', methods=["POST"])
+def create_pokemon_team():
     """route to create a new pokemon team for user"""
     
-    if not g.user.id == user_id:
+    if not g.user.id:
         flash("Access unauthorized.", "danger")
         return redirect("/")
     
@@ -322,7 +326,7 @@ def create_pokemon_team(user_id):
         flash("ERROR: invalid input or Pokémon. Please retry...", "danger")
         return redirect("/tools/team_creator")
     else:
-        new_pokemon_team = PokemonTeam(user_id=user_id)
+        new_pokemon_team = PokemonTeam(user_id=g.user.id)
         db.session.add(new_pokemon_team)
         db.session.commit()
         

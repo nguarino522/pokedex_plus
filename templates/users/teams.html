@@ -7,7 +7,7 @@
 {% for team in pokemon_teams %}
 <div class="fadein-animation alert alert-custom">
     <h1 class="text-center">Pokémon Team #{{loop.index}}:</h1>
-    <form method="POST" action="/users/{{g.user.id}}/delete_team/{{team.id}}">
+    <form method="POST" action="/users/delete_team/{{team.id}}">
         <div class="text-center my-3 fadein-animation">
             <!-- <input hidden type="text" name="pokemon_ids_text" value="{{team.id}}" id="pokemon_ids"> -->
             <button type="submit" class="btn btn-warning search-btn mx-2 submit-btn-team-create">Delete Team</button>
