@@ -282,7 +282,7 @@ def delete_user_saved_teams(team_id):
     db.session.delete(pokemon_team)
     db.session.commit()
     
-    flash("Pokémon has been successfully deleted!", "success")
+    flash("Pokémon Team has been successfully deleted!", "success")
     return redirect(f"/users/saved_teams")
 
 
