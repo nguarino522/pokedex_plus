@@ -3,7 +3,7 @@ from flask import Flask, render_template, request, flash, redirect, session, g, 
 from models import connect_db, User, db, Pokemon, Favorite, PokemonTeam, PokemonTeamMember
 from forms import UserAddForm, LoginForm, UserEditProfileForm
 from sqlalchemy.exc import IntegrityError
-from config import BASE_API_URL
+from config import BASE_API_URL, SURPRISED_PIKACHU_IMG
 import math, requests, random
 from flask_caching import Cache
 
@@ -229,7 +229,7 @@ def user_favorites():
     
     fav_ids = Favorite.get_all_favorited_pokemon_ids(g.user)
     
-    return render_template("users/favorites.html", pokemons=pokemons, fav_ids=fav_ids)
+    return render_template("users/favorites.html", pokemons=pokemons, fav_ids=fav_ids, pikachu_img=SURPRISED_PIKACHU_IMG)
 
 @app.route('/users/toggle_favorite/<int:pokemon_id>', methods=["GET", "POST"])
 def toggle_favorite(pokemon_id):
@@ -263,7 +263,7 @@ def user_saved_teams():
     
     pokemon_teams = PokemonTeam.query.filter_by(user_id=g.user.id).all()
     
-    return render_template("users/teams.html", pokemon_teams=pokemon_teams)
+    return render_template("users/teams.html", pokemon_teams=pokemon_teams, pikachu_img=SURPRISED_PIKACHU_IMG)
 
 @app.route('/users/delete_team/<int:team_id>', methods=["POST"])
 def delete_user_saved_teams(team_id):
@@ -303,7 +303,7 @@ def tool_team_creator():
         p = Pokemon.query.filter_by(pid=favorite.pokemon_id).first()
         pokemons.append(p)
     
-    return render_template("tools/team_creator.html", pokemons=pokemons)
+    return render_template("tools/team_creator.html", pokemons=pokemons, pikachu_img=SURPRISED_PIKACHU_IMG)
 
 @app.route('/tools/create_team', methods=["POST"])
 def create_pokemon_team():
@@ -346,14 +346,14 @@ def create_pokemon_team():
 def page_not_found(e):
     """404 NOT FOUND page."""
 
-    return render_template("404.html"), 404
+    return render_template("404.html", pikachu_img=SURPRISED_PIKACHU_IMG), 404
 
 
 @app.errorhandler(500)
 def error_processing_requst(e):
     """500 SERVER ERROR"""
 
-    return render_template("500.html"), 500
+    return render_template("500.html", pikachu_img=SURPRISED_PIKACHU_IMG), 500
 
 
 ##############################################################################
