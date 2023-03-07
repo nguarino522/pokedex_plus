@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}Pokémon Team Creator{% endblock %}
+
+{% block content %}
+
+<div class="fadein-animation alert alert-custom">
+    <h1 class="text-center">Pokémon Win Probability Calculator!</h1>
+    <p class="text-center">
+        TEMP: calculate percentage/probability 1 pokemon team will beat another, maybe have 2 options for calculating Probability if one pokemon will beat another? 
+    </p>
+    <form method="POST" action="/tools/create_team">
+        <div class="text-center my-3 fadein-animation">
+            <input hidden type="text" name="pokemon_ids_text" value="" id="pokemon_ids">
+            <button type="submit" class="btn btn-warning search-btn mx-2 submit-btn-team-create">Submit!</button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

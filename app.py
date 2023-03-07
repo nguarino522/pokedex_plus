@@ -337,7 +337,15 @@ def create_pokemon_team():
         
         flash("Pokémon team has been successfully created!", "success")
         return redirect("/tools/team_creator")
+
+
+@app.route('/tools/win_prob_calc')
+def win_prob_calc():
+    """route for win probability calculator tool"""
     
+    return render_template("tools/win_prob_calc.html")
+
+
 
 ##############################################################################
 # error handling routes:
