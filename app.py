@@ -346,6 +346,10 @@ def create_pokemon_team():
 def win_prob_calc():
     """route for win probability calculator tool"""
     
+    if not g.user:
+        flash("Access unauthorized. Please create an account and log in to use this tool.", "danger")
+        return redirect("/")
+    
     return render_template("tools/win_prob_calc.html")
 
 
