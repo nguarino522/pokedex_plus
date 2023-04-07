@@ -344,14 +344,40 @@ def create_pokemon_team():
 
 @app.route('/tools/win_prob_calc')
 def win_prob_calc():
-    """route for win probability calculator tool"""
+    """route for win probability calculator tool page"""
     
     if not g.user:
         flash("Access unauthorized. Please create an account and log in to use this tool.", "danger")
         return redirect("/")
     
-    return render_template("tools/win_prob_calc.html")
+    pokemons = []
+    for favorite in g.user.favorites:
+        p = Pokemon.query.filter_by(pid=favorite.pokemon_id).first()
+        pokemons.append(p)
+    
+    return render_template("tools/win_prob_calc.html", pokemons=pokemons, pikachu_img=SURPRISED_PIKACHU_IMG)
 
+@app.route('/tools/calculate_win_prob', methods=["POST"])
+def calculate_win_prob():
+    """route to calculate win probability percentage"""
+    
+    if not g.user.id:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+    
+    pokemon_ids = request.form["pokemon_ids_text"].split()
+    result = PokemonTeam.check_if_all_pokemon_ids_valid(pokemon_ids)
+    
+    if len(pokemon_ids) != 2:
+        flash("Please select exactly 2 pokemon.", "danger")
+        return redirect("/tools/win_prob_calc")
+    elif not result:
+        flash("ERROR: invalid input or Pokémon. Please retry...", "danger")
+        return redirect("/tools/team_creator")
+    else:
+        # code goes here (perhaps call model object method to calculate?) return percentages back
+        
+        return render_template("tools/win_prob_calc_result.html")
 
 
 ##############################################################################
