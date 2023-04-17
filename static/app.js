@@ -48,7 +48,6 @@ document.addEventListener("DOMContentLoaded", async (event) => {
             e.preventDefault();
             let pokemon_id = favBtn.getAttribute("data-id");
             toggleFavorite(pokemon_id, favBtn);
-            console.log(pokemon_id, favBtn)
         })
     });
     async function toggleFavorite(pokemon_id, favBtn) {
@@ -88,7 +87,6 @@ document.addEventListener("DOMContentLoaded", async (event) => {
                 // let currentValue = pokemonIds.value;
                 let newValue = pokemonIds.value.replace(pid, "");
                 pokemonIds.value = newValue;
-                console.log(pokemonIds.value);
                 card.classList.remove("selected");
             } else {
                 let pid = (card.getAttribute("data-id"));
@@ -99,7 +97,6 @@ document.addEventListener("DOMContentLoaded", async (event) => {
                     pokemonIds.value = `${currentValue} ${pid}`;
                 }
                 card.classList.add("selected");
-                console.log(pokemonIds.value);
             }
         })
     });
