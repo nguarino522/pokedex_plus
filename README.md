@@ -25,9 +25,8 @@ A more unique I wish to implement is a win probability calculator (and maybe als
 They will be able to select 2 different liked Pokemon and see what the probably percentage of each beating each other. For the team portion they will select team 1 and then team 2 (that they have saved), and it will compare stats and type, etc. to come out with a potential win probability.
 
 ## **Live Website**
-
-- Current hosting is on Fly.io: https://pokedex-plus.fly.dev/
-- I am still hosting on Render: https://pokedex-plus.onrender.com/ -> however, performance seems to be better on fly.io for the most part.
+- Hosting on Fly.io: https://pokedex-plus.fly.dev/ -> unable to deploy further due to having to put in credit card likely using Render only moving forward.
+- I am still hosting on Render: https://pokedex-plus.onrender.com/ -> performance seems to be slightly better on fly.io, however, might be better we recent job added to keep connection to db.
 - For the PostgreSQL DB, this being hosted on Supabase: https://supabase.com/
 
 

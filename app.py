@@ -45,7 +45,7 @@ def check_db_connection():
     return is_database_working, output
 
 scheduler = APScheduler()
-scheduler.add_job(func=check_db_connection, trigger='interval', id='job', hours=24)
+scheduler.add_job(func=check_db_connection, trigger='interval', id='job', hours=1)
 scheduler.start()
 
 
