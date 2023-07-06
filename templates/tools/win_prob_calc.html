@@ -1,13 +1,13 @@
 {% extends 'base.html' %}
-{% block title %}Pokémon Team Creator{% endblock %}
+{% block title %}Pokémon Win Probability Calculator{% endblock %}
 
 {% block content %}
 
 <div class="fadein-animation alert alert-custom">
-    <h1 class="text-center">Pokémon Win Probability Calculator!</h1>
+    <h1 class="text-center">Pokémon Win Probability Calculator! (UNDER CONSTRUCTION) </h1>
     <p class="text-center">
         Calculate percentage/probability of winning the battle between 2 different Pokémon!
-        Once they are selected hit the submit button to create the team! 
+        Once they are selected hit the submit button to check to see which percentage each pokemon has at winning against each other! 
     </p>
     <form method="POST" action="/tools/calculate_win_prob">
         <div class="text-center my-3 fadein-animation">
@@ -20,7 +20,7 @@
 {% if not pokemons %}
 <div class="container text-center alert alert-info">
     <h1>No Pokémon currently favorited to calculate win percentage!</h1>
-    <p>You currently don't have any Pokémon currently favorited. Please browse to the Pokédex pages to favorite some Pokémon to be able to create a team from them.</p>
+    <p>You currently don't have any Pokémon currently favorited. Please browse to the Pokédex pages to favorite some Pokémon to be able to use the predict calculator.</p>
         <div class="text-center">
             <a class="btn btn-warning search-btn mb-2" href="/pokedex/1">View Pokédex!</a>
         </div>

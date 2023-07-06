@@ -6,6 +6,7 @@ from sqlalchemy.exc import IntegrityError
 from config import BASE_API_URL, SURPRISED_PIKACHU_IMG
 import math, requests, random
 from flask_caching import Cache
+from flask_apscheduler import APScheduler
 
 CURR_USER_KEY = "curr_user"
 
@@ -27,6 +28,29 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', "6uar1n0")
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {"pool_pre_ping": True}
 
 connect_db(app)
+
+
+###########################################################
+# For making sure we hit Supabase DB once a day at least so it doesn't get shutdown for being idle
+def check_db_connection():
+    is_database_working = True
+    output = 'database is ok'
+    print(is_database_working,output)
+    try:
+        db.session.execute('SELECT 1')
+    except Exception as e:
+        output = str(e)
+        is_database_working = False
+        
+    return is_database_working, output
+
+scheduler = APScheduler()
+scheduler.add_job(func=check_db_connection, trigger='interval', id='job', hours=24)
+scheduler.start()
+
+
+
+
 
 
 ##############################################################################
