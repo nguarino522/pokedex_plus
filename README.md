@@ -1,5 +1,5 @@
 # Pokedex+ Application 
-
+## Springboard Software Engineering Capstone 1 Project
 
 
 <div align='center'>
